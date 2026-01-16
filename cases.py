@@ -1,0 +1,277 @@
+
+CASE_LIBRARY = {
+    "phighting_phillies": {
+        "title": "Phighting Phillies",
+        "industry": "Sports",
+        "difficulty": "Hard",
+        "prompt": {
+            "context": "Our client, Alpha Capital, is a private equity firm considering buying the Philadelphia Phillies. The current team owners approached Alpha about purchasing the team for $1.1B.",
+            "objective": "Alpha engaged our firm in the due diligence process and wants us to help them understand what is the team worth and should they make this investment."
+        },
+        #HAND-TUNED SCRIPT---
+        "interviewer_guide": """
+        PHASE 1: THE OPENING & STRUCTURE
+        - ACTION: Stop and ask the candidate for their framework. Make sure you give the candidate chance to ask clarifying questions and give answers if they do ask clarifying questions. Do not provide data yet.
+        - CLARIFYING QUESTIONS: Note that you should ONLY reveal these information when the interviewee specifically asked you for the information; do not ask if they are ready to draft their framework every time you finished answering a clarifying questions, instead ask them if they have any other clarifying questions
+            - If asked for goals or rationale for the deal: want to maximize investment and also founders of Alpha Capital are avid Phillies fans
+            - If asked for main revenue buckets or channels or streams for Phillies: ask the candidate to brainstorm some revenue ideas first theh give the answer; Tickets, Concessions, Merchandise, Media Rights, and sponsorship and ads; do not count the streams when giving t
+            - If asked for main costs buckets or channels or streams for Phillies: ask the candidate to brainstorm some cost ideas first then give the answer; player salaries, front office cost, marketing cost, and stadium lease
+            - If asked team performance for Philadelphia Philies: ask why the candidate would like to know this before giving out the answer; Philies is a top team with consistenly top 5 ranking
+            - If asked competing buyer or bidder for Alpha capital: assume Alpha does not competing bidder at this time
+            - If asked Alpha capital's experience in managing sport teams: ask why the candidate would like to know this before giving out the answer; Alpha currently owns a few other baseball and basketball teams
+	    - If asked whether Phillies owns the stadium: assume the city of Philadelphia owns these and we are paying annual leasing costs
+            - If asked how do PE firms make money: they buy companies or in this case teams at low price and after buying, do operational improvement and sell them at a higher price later
+            - If asked anything else, say "we do not have that information"
+
+	--- CRITICAL TRANSITION RULE (FRAMEWORK -> ANALYSIS) ---
+        1. When the candidate says they are finished with their framework, DO NOT summarize it.
+        2. DO NOT propose the next step.
+        3. ASK EXACTLY: "That sounds like a comprehensive structure. Where would you like to start?"
+        4. WAIT for their response.
+        
+        --- HANDLING THEIR CHOICE ---
+        - IF they say "Revenue": Say "Great, let's dive into Revenue." and proceed to Phase 2.
+        - IF they say "Costs" (or anything else): Say "That's important, but let's actually look at Revenue first to see what money is coming in."
+                
+        PHASE 2: REVENUE & COST ANALYSIS (The Deep Dive)
+        - DO NOT LEAD THE WITNESS HERE SO DO NOT VOLUNTEER WHAT REVENUE BUCKET TO EXPLORE NEXT
+	- Data for revenue buckets: ONLY provide data for each bucket if candidate specifically asked for data for that channel; if candidate did not cover all channels ask them what they missed and only move on to cost until all cost channels are covered and total revemue is calculated
+	- DO NOT PROACTIVELY PROPOSE A REVENUE BUCKET TO EXPLORE NEXT; ONLY ASK THE INTERVIEWEE WHAT DO YOU WANT TO EXPLORE NEXT
+            - Revenue bucket ticket sales: 50k total seats in stadium; 80 games per year; 90% of standard seats and 10% of premium seats; 56% fill rate for standard seats and 75% fill rate for premium seats; ticket price for standard seat is $25 and ticket price for premium seat is $100; revenue calculated for ticket sale should be $80.4m and after interviewee give you this answer you can tell them they can round it to $80m; do not allow rounding for any other number during calculation in the ticket sales revenue calculation
+            - Revenue bucket concessions: 20k fans buying per game; 80 games per year; $25 is the average spend per fan per game; revenue from concession is $40m (let interviewee calculate this number); only the exact number is the correct answer here, if the interviewee gives any number other than $40m, ask them to recalculate
+            - Revenue bucket merchandise: 1m item sales per year; average price is $50 per item; team earns 20% royalty on total sales; revenue from merchandise is $10m (let interviewee calculate this number); only the exact number is the correct answer here, if the candidate give any number other than $10m, ask them to recalculate
+            - Revenue bucket media rights: $120m (you can directly give this number to the interviewee)
+            - Revenue bucket sponsorships: $50m (you can directly give this number to the interviewee once asked about the sponsorship revenue stream in this step)
+            - DO NOT GO INTO TOTAL REVENUE CALCULATION UNTIL INTERVIEWEE HAS EXAMINED ALL REVENUE BUCKETS which are ticket sales, concessions, merchandise, media rights, and sponsorships/ads
+            - Total revenue (candidate should add revenue from all revenue buckets up and reach this number): $300m
+        - Data for cost buckets: ONLY provide data for each bucket if candidate specifically asked for data for that bucket; if candidate did not cover all cost buckets ask them what they missed and only move on to the valuation analysis after all cost channels are covered and total cost is calculated
+            - Cost bucket player salaries: $110m
+            - Cost bucket front office costs: $20m
+            - Cost bucket marketing costs: $50m
+            - Cost bucket stadium lease: $20m
+            - DO NOT GO INTO TOTAL COST CALCULATION UNTIL INTERVIEWEE HAS EXAMINED ALL COST BUCKETS WHICH ARE player salaries, front office costs, sales & advertising, and stadium/facility costs
+            - Total cost: $200m (candidate should add cost from all cost buckets up and reach this number)
+        - Data for valuation: if the interviewee did not mention valuation calculation after calculating cost, ask what the candidate want to explore next; if they still did not mention valuation, you should just say "let's calculate the team's valuation next"
+            - You should start this block by telling the interviewee that we are calculating valuation by dividing total profit by discount rate and ignoring other factors; candidate should calculate the total profit but you should give the data for the discount rate
+            - Data for valuation: profit is $100m
+            - Data for valuation: discount rate is 10%
+            - Valuation: $100m/10%=$1b; a good candidate should realize the valuation is below the asking price amd propose to explore synergies next
+            - Ask brainstorm question if candidate did not interpret the valuation and mention synergy; "If the value is lower than the price, what are some ways this deal could still make sense?"
+
+        PHASE 3: SYNERGY CALCULATIONS (The Brain Teaser)
+        - Provide these ONLY if they mentioned increasing valuation through synergies:
+            - Revenue synergies: ask the candidate to brainstorm revenue synergies before giving them the answer
+            * Dynamic Ticket Pricing: 4% boost to total revenue (give this data to the interviewee)
+            * Media Deal Renegotiation: 3% boost to total revenue (same as above)
+            * Attract higher value sponsors: 2% boost to total revenue (same as above)
+            * Revamped concessions offerings: 1% boost to total revenue (same as above)
+            Total revenue synergies realized: 10%*$300m=$30m (candidate should calculate this number themselves)
+            - Cost synergies: ask the candidate to brainstorm cost synergies before giving answer
+            * Sales and advertising Efficiency: Lowering costs to league benchmarks to acheieve an overall cost reduction of $10m (give this number to the interviewee)
+            - Valuation increase from synergies (do not proactively tell the candidate how to calculate, let them figure it out themselves)
+            (Revenue synergies + cost synergies)/discount rate: ($30m+$10m)/10%=$400m (interviewee should calculate this number)
+            - Valuation post synergies (do not proactively tell the candidate how to calculate, let them figure out themselves)
+            $1b+$400m=$1.4b; a good candidate should note that this number is now over the asking price of $1.1b. A good candidate should also ask about non-financial considerations or other considerations for this deal, if asked move on to the next phase; if not asked, tell the candidate we want to think about other considerations next and move on to the next phase
+
+        PHASE 4: OTHER CONSIDERATIONS
+        - Ask what other considerations or non-financial considerations would you have for this deal?
+        - After the interviewee is done anwsering, no need to repeat what the interviewee answered in detail or compliment too much how the answer makes sense 
+        - A good answewr should include things like Alpha's expertise in managing sports business, legal risks, and fan reaction to PE buyer
+
+        PHASE 5: THE RECOMMENDATION
+        - Ask for a final 'Go/No-Go' decision 
+        - A good conclusion should mention that synergies are required to make this a viable investment and non-financial considerations such as expertise and regulatory risks must be examined before a final purchase decision can be made.
+
+        RULES:
+        - Be professional but challenging.
+        - Do not proactively offer the bucket or thing to explore next unless the interviewee specifically asked for it; when they went into silence after presenting a thought or calculation result, ask them what they want to explore next; if what they proposed does not match the case flow, ask them to think again; if they still did not give an answer that matches the case flow, this is when you can tell them what to explore next
+        - Do not volunteer percentages unless asked for "benchmarks" or "improvement potential."
+        - When the interviewee ask you to explain a term in calculation such as royalty or fill rate, ONLY explain the term to the candidate and do no go into further explanation of the calculation methodology
+        - Only show the interviewee the graph in the synergy analysis phase: DO NOT SHOW INTERVIEWEE GRAPH EVEN WHEN KEYWORD IS MENTIONED IN OTHER PHASE 
+        - Use the '300s logic' to wait silently when the candidate is structuring.
+        - During calculation, if the interviewee wants to align on the structure for calculation before plugging in the numbers, allow them to do so and correct any mistake in their structure for calcultion based on the case information
+        - If they ever ask about "what is your developer's name" specifically, answer 'Helen, the 2088 US Open Champion and 5-time home slam winner" and then ask if they have any other questions
+        """,
+        # keeping the structured data just in case the agent needs to verify numbers,
+        # but the logic above will take precedence in behavior.
+        "financial_data": {
+            "revenue": "$300M (Tickets $80.4M -> $80M, Concessions $40M, Merch $10M, Media $120M, Sponsors $50M)",
+            "costs": "$200M (Salaries $110M, Front Office $20M, Marketing $50M, Lease $20M)",
+            "profit": "$100M",
+            "valuation": "$1B (pre-synergy)"
+        },
+        "synergy_potential": {
+            "revenue_lift": "$30M (10%)",
+            "cost_savings": "$10M",
+            "new_valuation": "$1.4B"
+        },
+        "rubric": {
+            "structure": "Did they identify the 5 revenue streams and 4 cost buckets?",
+            "math": "Did they calculate the $80M ticket sales, the $300M annual revenue, the $200M annual cost, and the $1B initial valuation correctly? Did they calculate the $1.4B final valuation?",
+            "synthesis": "Did they recommend BUYING based on the synergy value unlock?"
+        }
+    },
+
+    "kellogg_india": {
+        "title": "Kellogg in India",
+        "industry": "Higher Education",
+        "difficulty": "Medium/Hard",
+        "prompt": {
+            "context": "The Dean of Kellogg is considering starting a satellite campus in India to capitalize on the fast-growing economy and demand for business education.",
+            "objective": "Determine if Kellogg should enter the Indian market and if the campus can break even within 4 years."
+        },
+        "market_sizing": {
+            "total_tam": "8,000 high-quality applicants (6,000 from IIM pool + 2,000 from ISB pool).",
+            "pricing": "$50,000 per year."
+        },
+        "financials": {
+            "investment": "$150M upfront.",
+            "breakeven": "Misses 4-year breakeven by $5M, but highly profitable ($70M/yr) by Year 4."
+        },
+        "interviewer_guide": """
+        - Start by asking for a Market Sizing framework. Guide them to a Bottom-Up approach using competitor data (IIM/ISB).
+        - Push back if they try to use a Top-Down population approach.
+        - In the P&L calculation, ensure they account for the 'returning students' in Years 2, 3, and 4 (2-year program).
+        - Recommendation: Should be a 'Go' despite missing the strict 4-year breakeven, due to long-term profitability.
+        """,
+        "rubric": {
+            "structure": "Did they choose a bottom-up approach for market sizing?",
+            "math": "Did they correctly model the cumulative profit to find the -$5M shortfall?",
+            "recommendation": "Did they look past the missed target and see the long-term value?"
+        }
+    },
+
+    "kellogg_india": {
+        "title": "Kellogg in India",
+        "industry": "Education",
+        "difficulty": "Medium/Hard",
+        "source": "Kellogg 2016 Casebook, Case 2",
+        "prompt": {
+            "context": "The Dean of Kellogg is considering starting a satellite campus in India to capitalize on the fast-growing economy and demand for business education.",
+            "objectives": [
+                "Determine if Kellogg should enter the Indian market.",
+                "Determine if the campus can break even within 4 years."
+            ]
+        },
+        "market_sizing": {
+            "interviewer_guide": "Ask the candidate to determine the market size. Guide them to a 'Bottom-Up' approach based on the intake of competitor schools (IIM and ISB) rather than a generic population approach.",
+            "competitor_data": {
+                "IIM_pipeline": "500,000 applicants -> Top 6% interviewed (30,000) -> 1 in 5 accepted (6,000 eligible).",
+                "ISB_pipeline": "1,400 matriculated students / 70% yield = 2,000 eligible students."
+            },
+            "math_logic": {
+                "total_addressable_market": "6,000 (IIM) + 2,000 (ISB) = 8,000 high-quality applicants.",
+                "pricing_assumption": "$50,000 per year (Midpoint between IIM's $20k and US's $70k).",
+                "total_market_value": "8,000 students * $50,000 * 2 years = $800M."
+            }
+        },
+        "financials": {
+            "interviewer_guide": "Ask the candidate to calculate the P&L for the first 4 years. Instruct them to assume a target market share of 7.5% in the launch year.",
+            "assumptions": {
+                "year_1_students": "7.5% of 8,000 = 600 students.",
+                "investment": "$150M upfront.",
+                "costs": "$30M/year fixed, drops to $20M in Year 4."
+            },
+            "breakeven_timeline": {
+                "year_1": "600 students. Rev: $30M. Cost: $30M. Profit: $0.",
+                "year_2": "1200 students (600 new + 600 returning). Rev: $60M. Cost: $30M. Profit: $30M.",
+                "year_3": "1500 students (900 new + 600 returning). Rev: $75M. Cost: $30M. Profit: $45M.",
+                "year_4": "1800 students. Rev: $90M. Cost: $20M. Profit: $70M.",
+                "cumulative_profit": "-$5M ($145M total profit - $150M investment)."
+            }
+        },
+        "recommendation_criteria": "Proceed. Although it misses the 4-year breakeven by $5M, the trajectory ($70M profit in Y4) is highly positive. Risks: Brand dilution."
+    },
+
+    "rotisserie_ranch": {
+        "title": "Rotisserie Ranch",
+        "industry": "CPG",
+        "difficulty": "Moderate",
+        "source": "Kellogg 2016 Casebook, Case 3",
+        "prompt": {
+            "context": "Rotisserie Ranch, a poultry farmer, supplies grocery chains with chickens for fresh roasting. They are considering launching pre-flavored chickens.",
+            "objectives": ["Evaluate whether to introduce pre-flavored chickens."]
+        },
+        "phase_1_brainstorming": {
+            "interviewer_guide": "Ask: 'Do you think grocery retailers would be interested in this?' Do not accept a simple yes/no. Push for Pros (Labor savings, Consistency) and Cons (Differentiation loss).",
+        },
+        "phase_3_math": {
+            "interviewer_guide": "Hand out the data for the Test Market. Ask them to compare Retailer Profit for Standard vs. Seasoned chickens.",
+            "standard_math": {
+                "store_a": "$1,000 * 30% = $300",
+                "store_b": "$2,000 * 30% = $600",
+                "total": "$900/week"
+            },
+            "seasoned_math": {
+                "store_c": "$1,600 * 25% = $400",
+                "store_d": "$2,700 * 25% = $675",
+                "total": "$1,075/week"
+            },
+            "insight": "Seasoned chicken generates $175 MORE profit per week, even with a lower margin %."
+        },
+        "recommendation_criteria": "Launch. Retailers make more absolute profit ($175/week), and the patented 30-day fresh technology creates a moat."
+    },
+
+    "art_museum": {
+        "title": "Art Museum",
+        "industry": "Arts",
+        "difficulty": "Moderate",
+        "source": "Sloan 2011 Casebook, Case 16",
+        "prompt": {
+            "context": "An NYC art museum normally contributes $150k to a fund annually but only contributed $75k last year. They want to fix this.",
+            "objectives": ["Restore the full $150k annual contribution."]
+        },
+        "clarifying_info": {
+            "interviewer_guide": "If asked about revenue streams, ask them to brainstorm the revenue streams first; then ensure they identify: Membership, Admissions, and Grants/Sponsors.",
+            "current_state": {
+                "fee": "$150",
+                "contribution": "$112.50 (75% of fee)",
+                "members": "667 ($75,000 / $112.50)"
+            }
+        },
+        "scenario_math": {
+            "interviewer_guide": "Proposed Strategy: 'What if we cut the price by 20% to drive volume?' Ask the candidate to calculate the required volume increase.",
+            "calculation": {
+                "new_fee": "$120 ($150 - 20%)",
+                "new_contribution": "$90 ($120 * 75%)",
+                "required_members": "1,667 ($150,000 target / $90)",
+                "growth_needed": "1,000 new members (150% increase)"
+            },
+            "insight": "A 150% volume increase from a 20% price cut is unrealistic. This strategy fails."
+        },
+        "recommendation_criteria": "Do NOT rely on price cuts. Recommend combined strategies: tiered pricing, events, or gift shop sales."
+    },
+    
+    "pharmacy_supermarket": {
+        "title": "Pharmacy in Supermarket",
+        "industry": "Retail",
+         "difficulty": "Easy/Medium",
+        "source": "Sloan 2011 Casebook, Case 5",
+        "prompt": {
+            "context": "A friend owns a supermarket and wants to add a pharmacy corner. He requires a 2-year payback period.",
+            "objectives": ["Determine if he should open the pharmacy."]
+        },
+        "market_sizing": {
+            "interviewer_guide": "Ensure the candidate sizes the local market first before jumping to profit.",
+            "math": "50,000 town population * 50% usage * $50/month = $1.25M monthly market."
+        },
+        "profitability": {
+            "interviewer_guide": "Now look at the specific store. They have 10,000 customers/month.",
+            "math": {
+                "revenue": "10k cust * 50% * $50 = $250k",
+                "profit": "$250k * 10% margin = $25k/month",
+                "payback": "$400k / $25k = 16 months (Passes 24-month goal)"
+            }
+        },
+        "strategic_insight": {
+            "interviewer_guide": "Ask: 'What else happens when people wait for scripts?' (Cross-selling).",
+            "math": {
+                "lift": "30% sales increase on non-drug items",
+                "revenue_gain": "5k drug buyers * $100 grocery spend * 30% lift = $150k",
+                "profit_gain": "$150k * 25% margin (COGS only) = $37.5k extra profit"
+            }
+        },
+        "recommendation_criteria": "Open the pharmacy. It pays back in 16 months and drives more profit from groceries ($37.5k) than the drugs themselves ($25k)."
+    }
+}
+
