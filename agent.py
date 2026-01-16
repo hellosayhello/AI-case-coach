@@ -132,7 +132,7 @@ async def entrypoint(ctx: JobContext):
         stt=openai.STT(),
         llm=openai.LLM(model="gpt-4o-mini"), 
         tts=openai.TTS(),
-        min_endpointing_delay=0.7
+        min_endpointing_delay=0.5
     )
     
     # LISTEN FOR MAGIC WORD
@@ -145,7 +145,7 @@ async def entrypoint(ctx: JobContext):
             session.min_endpointing_delay = 300.0
             print("--- 300s DELAY ---")
         elif any(p in text for p in ["ready", "framework", "finished", "go ahead"]):
-            session.min_endpointing_delay = 0.7
+            session.min_endpointing_delay = 0.5
             print("--- DELAY RESET ---")
             
         # TRIGGER FEEDBACK ON VOICE COMMAND
