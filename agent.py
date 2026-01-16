@@ -1,62 +1,37 @@
 import os
 import asyncio
 import json
-from typing import Annotated
 from dotenv import load_dotenv
 
+# --- IMPORTS (Standard Agent Only) ---
 from livekit import agents, rtc
 from livekit.agents import (
     Agent,
+    AgentServer,
+    AgentSession,
     JobContext,
-    WorkerOptions,
     cli,
     llm,
 )
-from livekit.agents.pipeline import VoicePipelineAgent, AgentCallContext
 from livekit.plugins import openai, silero
-
 from cases import CASE_LIBRARY 
 
 load_dotenv()
 
-# --- 1. THE FEEDBACK TOOL ---
-class ExhibitTool(llm.FunctionContext):
-    def __init__(self):
-        super().__init__()
+server = AgentServer()
 
-    @llm.ai_callable(description="Call this ONLY after the candidate has provided their final recommendation in Phase 3. This enables the 'End Interview and Review Feedback' button for them.")
-    async def allow_end_interview(self):
-        print("   ---> ENABLING END BUTTON")
-        # Get current room
-        ctx = AgentCallContext.get_current()
-        room = ctx.agent.room
-        
-        # Send signal to frontend
-        await room.local_participant.publish_data(
-            payload=json.dumps({"type": "ENABLE_END_BUTTON"}),
-            topic="control"
-        )
-        return "I have enabled the end interview and review feedback button."
-
-# --- 2. GRADING HELPER FUNCTIONS ---
+# --- GRADING LOGIC ---
 async def generate_feedback(formatted_history, llm_instance):
     print("--- GENERATING FEEDBACK ---")
-    
     system_prompt = """
     You are a senior BCG interviewer grading a candidate. 
     Review the transcript below.
+    CRITICAL: Check if their verbal math matches the correct answers ($300M Revenue, $1B Valuation, etc).
     
-    CRITICAL GRADING CRITERIA:
-    1. STRUCTURE: Did they stick to a logical framework?
-    2. DATA & MATH: The candidate was given verbal data (e.g., ticket prices, costs). 
-       - Did they calculate the totals correctly (e.g., $300M Revenue, $1B Valuation)?
-       - Did they catch any trick questions?
-    3. COMMUNICATION: Was the synthesis clear and concise?
-    
-    Return ONLY a JSON object with this exact structure:
+    Return ONLY a JSON object:
     {
-      "score": 8,
-      "feedback_text": "A short summary of performance...",
+      "score": 0,
+      "feedback_text": "Summary...",
       "buckets": {
         "Structure": {"score": 0, "comment": "..."},
         "Data & Math": {"score": 0, "comment": "..."},
@@ -65,60 +40,46 @@ async def generate_feedback(formatted_history, llm_instance):
       }
     }
     """
-
     chat_ctx = llm.ChatContext().append(role="system", text=system_prompt)
     chat_ctx.append(role="user", text=f"TRANSCRIPT:\n{formatted_history}")
-    
     stream = llm_instance.chat(chat_ctx=chat_ctx)
-    
     full_response = ""
     async for chunk in stream:
         if chunk.choices[0].delta.content:
             full_response += chunk.choices[0].delta.content
-
-    clean_json = full_response.replace("```json", "").replace("```", "").strip()
-    return clean_json
+    return full_response.replace("```json", "").replace("```", "").strip()
 
 async def run_grading_task(history_text, room):
+    # Notify Frontend
     await room.local_participant.publish_data(
-        payload=json.dumps({"type": "STATUS", "msg": "Generating Feedback..."}), 
+        payload=json.dumps({"type": "STATUS", "msg": "Analyzing..."}), 
         topic="feedback"
     )
-    
+    # Run Grading
     grading_llm = openai.LLM(model="gpt-4o") 
     feedback_json = await generate_feedback(history_text, grading_llm)
-    
+    # Send Result
     await room.local_participant.publish_data(
         payload=feedback_json.encode("utf-8"), 
         topic="feedback"
     )
 
-
-# --- 3. MAIN ENTRYPOINT ---
+# --- MAIN ENTRYPOINT ---
+@server.rtc_session()
 async def entrypoint(ctx: JobContext):
     await ctx.connect()
     participant = await ctx.wait_for_participant()
     
-    # Load Case
-    selected_case_id = "phighting_phillies" 
+    selected_case_id = "phighting_phillies"
     if participant.metadata:
         try:
             meta = json.loads(participant.metadata)
             selected_case_id = meta.get("selectedCase", "phighting_phillies")
-        except:
-            print("--- WARN: Metadata read failed, defaulting ---")
+        except: pass
 
     case_data = CASE_LIBRARY.get(selected_case_id, CASE_LIBRARY["phighting_phillies"])
     print(f"--- LOADING CASE: {case_data['title']} ---")
 
-    analysis_keys = [
-        "financial_data", "market_sizing", "math_benchmarks", 
-        "scenario_math", "synergy_potential", "profitability", 
-        "grocery_impact", "economics", "phase_1_brainstorming", "phase_3_math"
-    ]
-    relevant_analysis_data = {k: case_data[k] for k in analysis_keys if k in case_data}
-
-    # The Prompt
     dynamic_instructions = f"""
     ROLE: You are Brian, a BCG Manager. 
     You are interviewing a candidate for an Associate position. 
@@ -147,72 +108,59 @@ async def entrypoint(ctx: JobContext):
     --- PHASE 2: ANALYSIS & DATA ---
     - Guide the candidate through the analysis. 
     - ANSWER KEY (FOR YOUR EYES ONLY): 
-    {json.dumps(relevant_analysis_data, indent=2)}
+    {json.dumps(relevant_analysis_data := {k: case_data[k] for k in ["financial_data", "market_sizing", "math_benchmarks", "scenario_math", "synergy_potential", "profitability", "grocery_impact", "economics", "phase_1_brainstorming", "phase_3_math"] if k in case_data}, indent=2)}
 
     *** CRITICAL DATA SHARING RULES ***
     1. SHARE INPUTS ONLY: Provide ONLY raw variables if asked.
     2. WITHHOLD OUTPUTS: NEVER reveal calculated figures (Total Revenue, Profit) unless confirming.
     3. IF ASKED FOR ANSWER: Ask "How would you calculate it?"
 
-    --- PHASE 3: RECOMMENDATION ---
-    - Ask for a final recommendation.
-    - SUCCESS CRITERIA: {case_data.get('recommendation_criteria', '')}
+    --- PHASE 3: RECOMMENDATION & CLOSING ---
+    - Ask for a final recommendation. 
+    - Once the candidate gives their recommendation, acknowledge it briefly.
+    - THEN, SAY EXACTLY THIS: "This concludes the case. If you are ready to see your performance report, just say 'I want to review my case feedback'."
+    - Wait for them to say it.
     
-    *** CRITICAL INSTRUCTION ***
-    - Once the candidate has finished their recommendation and you have acknowledged it:
-    - YOU MUST CALL the "allow_end_interview" tool immediately. 
-    - Do not say goodbye until you have called this tool.
-
     --- INTERVIEWER GUIDANCE ---
     {json.dumps(case_data.get('interviewer_guide', ''), indent=2)}
-
-    --- GENERAL RULES ---
-    - If they say "I need a minute to think", say "sure take your time" and wait.
-    - If asked about "developer's name", answer 'Helen, the 2088 US Open Champion'.
     """
 
-    # --- SETUP THE AGENT ---
-    initial_ctx = llm.ChatContext().append(
-        role="system",
-        text=dynamic_instructions,
-    )
-
-    # VoicePipelineAgent to support Tools
-    agent = VoicePipelineAgent(
+    session = AgentSession(
         vad=silero.VAD.load(),
         stt=openai.STT(),
         llm=openai.LLM(model="gpt-4o-mini"), 
         tts=openai.TTS(),
-        fnc_ctx=ExhibitTool(), # <--- THIS ENABLES THE BUTTON TOOL
-        chat_ctx=initial_ctx,
+        min_endpointing_delay=0.7
     )
-
-    # --- HANDLE DELAYS (Thinking Mode) ---
-    @agent.on("user_speech_committed")
-    def on_user_speech(agent, transcript: rtc.ChatMessage):
-        text = transcript.content.lower()
-        if any(p in text for p in ["minute to structure", "moment to think", "take some time", "thinking"]):
-            agent.min_endpointing_delay = 300.0
-            print(f"--- PHASE: 300s DELAY ENABLED ---")
+    
+    # LISTEN FOR MAGIC WORD
+    @session.on("user_input_transcribed")
+    def on_user_input(event):
+        text = event.transcript.lower()
+        
+        # Thinking Delay Logic
+        if any(p in text for p in ["minute to structure", "take some time", "thinking"]):
+            session.min_endpointing_delay = 300.0
+            print("--- 300s DELAY ---")
         elif any(p in text for p in ["ready", "framework", "finished", "go ahead"]):
-            agent.min_endpointing_delay = 0.7
-            print("--- PHASE: 0.7s DELAY RESET ---")
-
-    agent.start(ctx.room, participant)
-
-    # --- HANDLE "END INTERVIEW" SIGNAL ---
-    @ctx.room.on("data_received")
-    def on_data(payload: rtc.DataPacket):
-        data = payload.data.decode("utf-8")
-        if data == "GENERATE_FEEDBACK":
-            print("--- ENDING INTERVIEW & GRADING ---")
+            session.min_endpointing_delay = 0.7
+            print("--- DELAY RESET ---")
+            
+        # TRIGGER FEEDBACK ON VOICE COMMAND
+        if "review my case feedback" in text or "review my feedback" in text:
+            print(f"--- DETECTED MAGIC WORD: {text} ---")
             history = agent.chat_ctx.messages
             formatted = "\n".join([f"{m.role}: {m.content}" for m in history])
             asyncio.create_task(run_grading_task(formatted, ctx.room))
 
-    # --- GREETING ---
+    agent = Agent(instructions=dynamic_instructions)
+    await session.start(agent=agent, room=ctx.room)
+
+    # Small delay for audio connection
+    await asyncio.sleep(1.0)
+    
     greeting_text = f"Hi, I'm Brian. I am your interviewer today and I look forward to our case discussion. Diving into the case, {case_data['prompt']['context']}"
-    await agent.say(greeting_text, allow_interruptions=True)
+    await session.generate_reply(instructions=f"Say exactly this: '{greeting_text}'")
 
 if __name__ == "__main__":
-    cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
+    cli.run_app(server)
