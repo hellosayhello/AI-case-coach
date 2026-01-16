@@ -16,6 +16,7 @@ CASE_LIBRARY = {
             - If asked for goals or rationale for the deal: want to maximize investment and also founders of Alpha Capital are avid Phillies fans
             - If asked for main revenue buckets or channels or streams for Phillies: ask the candidate to brainstorm some revenue ideas first theh give the answer; Tickets, Concessions, Merchandise, Media Rights, and sponsorship and ads; do not count the streams when giving t
             - If asked for main costs buckets or channels or streams for Phillies: ask the candidate to brainstorm some cost ideas first then give the answer; player salaries, front office cost, marketing cost, and stadium lease
+            - If asked sports for Philadelphia Phillies: a US baseball team based in Phildelphia; it competes in Major League Baseball also known as MLB
             - If asked team performance for Philadelphia Philies: ask why the candidate would like to know this before giving out the answer; Philies is a top team with consistenly top 5 ranking
             - If asked competing buyer or bidder for Alpha capital: assume Alpha does not competing bidder at this time
             - If asked Alpha capital's experience in managing sport teams: ask why the candidate would like to know this before giving out the answer; Alpha currently owns a few other baseball and basketball teams
@@ -30,7 +31,7 @@ CASE_LIBRARY = {
         4. WAIT for their response.
         
         --- HANDLING THEIR CHOICE ---
-        - IF they say "Revenue": Say "Great, let's dive into Revenue." and proceed to Phase 2.
+        - IF they say "Revenue" or anything revenue related: Say "Great, let's dive into Revenue." and proceed to Phase 2.
         - IF they say "Costs" (or anything else): Say "That's important, but let's actually look at Revenue first to see what money is coming in."
                 
         PHASE 2: REVENUE & COST ANALYSIS (The Deep Dive)
