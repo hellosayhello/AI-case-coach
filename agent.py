@@ -53,7 +53,8 @@ async def run_grading_task(history_text, room):
     # Notify Frontend
     await room.local_participant.publish_data(
         payload=json.dumps({"type": "STATUS", "msg": "Analyzing..."}), 
-        topic="feedback"
+        topic="feedback",
+        reliable=True
     )
     # Run Grading
     grading_llm = openai.LLM(model="gpt-4o") 
@@ -61,7 +62,8 @@ async def run_grading_task(history_text, room):
     # Send Result
     await room.local_participant.publish_data(
         payload=feedback_json.encode("utf-8"), 
-        topic="feedback"
+        topic="feedback",
+        reliable=True
     )
 
 # --- MAIN ENTRYPOINT ---
