@@ -1,29 +1,105 @@
 import os
 import asyncio
 import json
+from typing import Annotated
 from dotenv import load_dotenv
 
-from livekit import agents
+from livekit import agents, rtc
 from livekit.agents import (
     Agent,
-    AgentServer,
-    AgentSession,
     JobContext,
+    WorkerOptions,
     cli,
+    llm,
 )
+from livekit.agents.pipeline import VoicePipelineAgent, AgentCallContext
 from livekit.plugins import openai, silero
 
 from cases import CASE_LIBRARY 
 
 load_dotenv()
 
-server = AgentServer()
+# --- 1. THE FEEDBACK TOOL ---
+class ExhibitTool(llm.FunctionContext):
+    def __init__(self):
+        super().__init__()
 
-@server.rtc_session()
+    @llm.ai_callable(description="Call this ONLY after the candidate has provided their final recommendation in Phase 3. This enables the 'End Interview and Review Feedback' button for them.")
+    async def allow_end_interview(self):
+        print("   ---> ENABLING END BUTTON")
+        # Get current room
+        ctx = AgentCallContext.get_current()
+        room = ctx.agent.room
+        
+        # Send signal to frontend
+        await room.local_participant.publish_data(
+            payload=json.dumps({"type": "ENABLE_END_BUTTON"}),
+            topic="control"
+        )
+        return "I have enabled the end interview and review feedback button."
+
+# --- 2. GRADING HELPER FUNCTIONS ---
+async def generate_feedback(formatted_history, llm_instance):
+    print("--- GENERATING FEEDBACK ---")
+    
+    system_prompt = """
+    You are a senior BCG interviewer grading a candidate. 
+    Review the transcript below.
+    
+    CRITICAL GRADING CRITERIA:
+    1. STRUCTURE: Did they stick to a logical framework?
+    2. DATA & MATH: The candidate was given verbal data (e.g., ticket prices, costs). 
+       - Did they calculate the totals correctly (e.g., $300M Revenue, $1B Valuation)?
+       - Did they catch any trick questions?
+    3. COMMUNICATION: Was the synthesis clear and concise?
+    
+    Return ONLY a JSON object with this exact structure:
+    {
+      "score": 8,
+      "feedback_text": "A short summary of performance...",
+      "buckets": {
+        "Structure": {"score": 0, "comment": "..."},
+        "Data & Math": {"score": 0, "comment": "..."},
+        "Communication": {"score": 0, "comment": "..."},
+        "Creativity": {"score": 0, "comment": "..."}
+      }
+    }
+    """
+
+    chat_ctx = llm.ChatContext().append(role="system", text=system_prompt)
+    chat_ctx.append(role="user", text=f"TRANSCRIPT:\n{formatted_history}")
+    
+    stream = llm_instance.chat(chat_ctx=chat_ctx)
+    
+    full_response = ""
+    async for chunk in stream:
+        if chunk.choices[0].delta.content:
+            full_response += chunk.choices[0].delta.content
+
+    clean_json = full_response.replace("```json", "").replace("```", "").strip()
+    return clean_json
+
+async def run_grading_task(history_text, room):
+    await room.local_participant.publish_data(
+        payload=json.dumps({"type": "STATUS", "msg": "Generating Feedback..."}), 
+        topic="feedback"
+    )
+    
+    grading_llm = openai.LLM(model="gpt-4o") 
+    feedback_json = await generate_feedback(history_text, grading_llm)
+    
+    await room.local_participant.publish_data(
+        payload=feedback_json.encode("utf-8"), 
+        topic="feedback"
+    )
+
+
+# --- 3. MAIN ENTRYPOINT ---
 async def entrypoint(ctx: JobContext):
     await ctx.connect()
     participant = await ctx.wait_for_participant()
     
+    # Load Case
     selected_case_id = "phighting_phillies" 
     if participant.metadata:
         try:
@@ -35,7 +111,6 @@ async def entrypoint(ctx: JobContext):
     case_data = CASE_LIBRARY.get(selected_case_id, CASE_LIBRARY["phighting_phillies"])
     print(f"--- LOADING CASE: {case_data['title']} ---")
 
-    # Dynamic Data Loading
     analysis_keys = [
         "financial_data", "market_sizing", "math_benchmarks", 
         "scenario_math", "synergy_potential", "profitability", 
@@ -43,11 +118,11 @@ async def entrypoint(ctx: JobContext):
     ]
     relevant_analysis_data = {k: case_data[k] for k in analysis_keys if k in case_data}
 
-    # --- THE UPDATED BRAIN ---
+    # The Prompt
     dynamic_instructions = f"""
     ROLE: You are Brian, a BCG Manager. 
     You are interviewing a candidate for an Associate position. 
-    Your personality is professional, slightly challenging, but fair. You never volunteer what to explore next or lead the witness with the exception that you will provide the guidance in where to start after the interviewee presented the framework. You never do any calculation for the interviewee. You want to see if the candidate can think through a complex problem, handle data, and arrive at a logical recommendation. Double check your math before speaking.
+    Your personality is professional, slightly challenging, but fair.
     
     --- CASE CONTEXT ---
     TITLE: {case_data['title']}
@@ -55,81 +130,89 @@ async def entrypoint(ctx: JobContext):
     CONTEXT: {case_data['prompt']['context']}
     OBJECTIVE: {case_data.get('prompt', {}).get('objectives', case_data['prompt'].get('objective'))}
 
-    --- THE PASSIVE INTERVIEWER PROTOCOL (STRICT RULES) ---
+    --- THE PASSIVE INTERVIEWER PROTOCOL ---
     0. THE "READY" TRAP: 
-       - IF the user says "I am ready to present", "I have my structure", or "Here is my plan" BUT does not list specific buckets (e.g., Revenue, Cost, Market):
-       - DO NOT say "Great structure."
+       - IF the user says "I am ready to present", "I have my structure", or "Here is my plan" BUT does not list specific buckets:
        - SAY ONLY: "Please walk me through it." or "Go ahead."
-    1. NEVER LEAD THE WITNESS: Do not suggest the next step or what to look into next. Do not ask "Shall we look at X?". 
-       - Bad: "That looks good. Would you like to explore the revenue from media rights next?"
-       - Good: "That looks good. What would you like to do next?"
-    2. FORCE THE DRIVE: If the candidate stops talking, wait. If you must speak, ask "What is your hypothesis?" or "How would you proceed?"
-    3. DATA GATING: Never volunteer data. 
-       - If they ask a vague question like "tell me about the market", ask "What specific data points are you looking for?"
-       - After you have disclosed the variables, disclose the numbers associated with the variables to the interviewee as well. Do not ask the question "now would you like the specific numbers so that you can do your calculation?" and instead just give them the actual numbers for the variables.
-    4. CONVERSATIONAL LISTS (NO COUNTING):
-       - When listing items (like revenue streams or costs), NEVER use numbered lists ("1. X, 2. Y").
-       - Speak naturally. Use words like "and" or "as well as".
-       - Bad: "The main revenue streams are 1. Tickets, 2. Concessions. 3. Merchandise"
-       - Good: "The main revenue streams are tickets, concessions, and merchandise." 
+    1. NEVER LEAD THE WITNESS: Do not suggest the next step.
+    2. FORCE THE DRIVE: If the candidate stops talking, wait.
+    3. DATA GATING: Never volunteer data. Only provide if asked.
+    4. CONVERSATIONAL LISTS: Do not use numbered lists.
 
     --- PHASE 1: FRAMEWORK & STRUCTURE ---
     - Start by introducing the case context.
-    - Ask the candidate to structure their approach (Framework) and ask if they have any clarifying questions.
-    - Allow clarifying questions.
-    - Proceed to phase 2 only after the candidate has walked you through their framework.
+    - Ask the candidate to structure their approach.
     - CLARIFYING DATA: {json.dumps(case_data.get('clarifying_info', {}))}
 
-    --- PHASE 2: ANALYSIS & DATA (THE DEEP DIVE) ---
+    --- PHASE 2: ANALYSIS & DATA ---
     - Guide the candidate through the analysis. 
     - ANSWER KEY (FOR YOUR EYES ONLY): 
     {json.dumps(relevant_analysis_data, indent=2)}
 
     *** CRITICAL DATA SHARING RULES ***
-    1. DISTINGUISH INPUTS vs. OUTPUTS: The 'ANSWER KEY' above contains both raw inputs (e.g., "Population: 50k", "Price: $10") and calculated outputs (e.g., "Market Size: $500k").
-    2. SHARE INPUTS ONLY: If the candidate asks for data, provide ONLY the raw variables necessary for the calculation. ONLY provide the data the interviewee asked for. 
-    3. WITHHOLD OUTPUTS: NEVER reveal the final calculated figures (e.g., Total Revenue, Profit, Valuation, Market Size) unless the candidate has already calculated it themselves and you are confirming their answer.
-    4. IF ASKED FOR THE ANSWER: If they ask "What is the market size?", reply: "We don't have that figure directly, but we do have data on population and spend. How would you calculate it?"
-    5. NEVER PROACTIVELY PROPOSE WHAT TO EXPLORE NEXT: Wait for the interviewee to say what they want to explore next. If they do not say it, ask what they want to explore next.
+    1. SHARE INPUTS ONLY: Provide ONLY raw variables if asked.
+    2. WITHHOLD OUTPUTS: NEVER reveal calculated figures (Total Revenue, Profit) unless confirming.
+    3. IF ASKED FOR ANSWER: Ask "How would you calculate it?"
 
     --- PHASE 3: RECOMMENDATION ---
-    - Ask for a final recommendation. Ask the interviewee "We're at time, can you tell me your final recommendation for this case?" 
+    - Ask for a final recommendation.
     - SUCCESS CRITERIA: {case_data.get('recommendation_criteria', '')}
+    
+    *** CRITICAL INSTRUCTION ***
+    - Once the candidate has finished their recommendation and you have acknowledged it:
+    - YOU MUST CALL the "allow_end_interview" tool immediately. 
+    - Do not say goodbye until you have called this tool.
 
     --- INTERVIEWER GUIDANCE ---
     {json.dumps(case_data.get('interviewer_guide', ''), indent=2)}
 
     --- GENERAL RULES ---
-    - Be professional but challenging.
-    - If they say things like "I need a minute to think" and ask for time to think, answer "sure take your time" and then stay silent (the system will pause for 300s).
-    - When the interviewee asks you to explain a term in calculation such as royalty or fill rate, ONLY explain the term to the candidate and stop there. Do not go into further explanation of the calculation methodology. Same for clarifying question answers - answer the clarifying question and that’s it - NEVER reveal case framework or structure to the interviewee.
-    - - During calculation, if the interviewee wants to align on the structure for calculation before plugging in the numbers, allow them to do so and correct any mistake in their structure for calcultion based on the case information
-    - If the interviewee ever asks about "what is your developer's name" specifically, answer 'Helen, the 2088 US Open Champion and 5-time home slam winner" and then ask if they have any other questions
+    - If they say "I need a minute to think", say "sure take your time" and wait.
+    - If asked about "developer's name", answer 'Helen, the 2088 US Open Champion'.
     """
 
-    session = AgentSession(
+    # --- SETUP THE AGENT ---
+    initial_ctx = llm.ChatContext().append(
+        role="system",
+        text=dynamic_instructions,
+    )
+
+    # VoicePipelineAgent to support Tools
+    agent = VoicePipelineAgent(
         vad=silero.VAD.load(),
         stt=openai.STT(),
         llm=openai.LLM(model="gpt-4o-mini"), 
         tts=openai.TTS(),
-        min_endpointing_delay=0.7
+        fnc_ctx=ExhibitTool(), # <--- THIS ENABLES THE BUTTON TOOL
+        chat_ctx=initial_ctx,
     )
 
-    @session.on("user_input_transcribed")
-    def on_user_input(event):
-        text = event.transcript.lower()
+    # --- HANDLE DELAYS (Thinking Mode) ---
+    @agent.on("user_speech_committed")
+    def on_user_speech(agent, transcript: rtc.ChatMessage):
+        text = transcript.content.lower()
         if any(p in text for p in ["minute to structure", "moment to think", "take some time", "thinking"]):
-            session.min_endpointing_delay = 300.0
-            print(f"--- PHASE: 300s DELAY ENABLED ({selected_case_id}) ---")
+            agent.min_endpointing_delay = 300.0
+            print(f"--- PHASE: 300s DELAY ENABLED ---")
         elif any(p in text for p in ["ready", "framework", "finished", "go ahead"]):
-            session.min_endpointing_delay = 0.7
+            agent.min_endpointing_delay = 0.7
             print("--- PHASE: 0.7s DELAY RESET ---")
 
-    agent = Agent(instructions=dynamic_instructions)
-    await session.start(agent=agent, room=ctx.room)
-    
+    agent.start(ctx.room, participant)
+
+    # --- HANDLE "END INTERVIEW" SIGNAL ---
+    @ctx.room.on("data_received")
+    def on_data(payload: rtc.DataPacket):
+        data = payload.data.decode("utf-8")
+        if data == "GENERATE_FEEDBACK":
+            print("--- ENDING INTERVIEW & GRADING ---")
+            history = agent.chat_ctx.messages
+            formatted = "\n".join([f"{m.role}: {m.content}" for m in history])
+            asyncio.create_task(run_grading_task(formatted, ctx.room))
+
+    # --- GREETING ---
     greeting_text = f"Hi, I'm Brian. I am your interviewer today and I look forward to our case discussion. Diving into the case, {case_data['prompt']['context']}"
-    await session.generate_reply(instructions=f"Say exactly this: '{greeting_text}'")
+    await agent.say(greeting_text, allow_interruptions=True)
 
 if __name__ == "__main__":
-    cli.run_app(server)
+    cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
