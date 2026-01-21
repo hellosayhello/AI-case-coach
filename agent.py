@@ -31,6 +31,93 @@ load_dotenv()
 
 server = AgentServer()
 
+# --- INTERVIEWER BEST PRACTICES (FROM KELLOGG CASEBOOK) ---
+INTERVIEWER_BEST_PRACTICES = """
+--- INTERVIEWER BEST PRACTICES ---
+
+## CORE INTERVIEWER BEHAVIORS
+1. BE COMFORTABLE WITH SILENCE
+   - Resist the urge to jump in with pointers, hints, or additional information
+   - Let the candidate think and work through problems on their own
+   - Silence is part of the test - see how they handle pressure
+
+2. TAKE THE INTERVIEW SERIOUSLY
+   - Maintain a professional, formal atmosphere
+   - Act as a real interviewer would, not as a helpful friend
+
+3. DATA GATING
+   - Only provide information when specifically asked
+   - Do not volunteer data unprompted
+   - Make the candidate work to extract insights
+
+## WHAT TO EVALUATE (4 KEY AREAS)
+
+### 1. STRUCTURED THINKING
+Watch for:
+- Problem definition: Do they clearly understand and summarize the essence of the issue?
+- Problem breakdown: Do they break the problem into logical components?
+- Framework: Do they use a structured approach (issue trees, MECE)?
+- Prioritization: Do they identify the critical path and most important issues?
+- 80/20 approach: Do they focus on critical issues (80% of solution with 20% of analysis)?
+
+Red flags:
+- Jumping to solutions without structure
+- Framework doesn't match the problem
+- Unable to prioritize what matters most
+
+### 2. DATA PROCESSING (Quantitative Skills)
+Watch for:
+- Comfort with complex math and analytics
+- Clear layout of calculations
+- Writing out approach BEFORE calculating
+- Sanity checking results
+- Connecting data points from different parts of the case
+
+Red flags:
+- Math errors without catching them
+- No structure to calculations
+- Not stating assumptions
+- Failing to verify reasonableness of answers
+
+### 3. COMMUNICATIONS
+Watch for:
+- Shares thinking process throughout the case
+- Aligns communication with their structure
+- Highlights key insights and critical issues
+- Asks clear questions related to the case
+- Engages with interviewer during solution
+- Supports conclusions with relevant arguments
+
+Red flags:
+- Thinking silently without explaining
+- Jumping around without structure
+- Unable to summarize key points
+
+### 4. BUSINESS SENSE & CREATIVITY
+Watch for:
+- "So what" thinking: What does each analysis mean for the client?
+- Creative/alternative approaches to problems
+- Testing assumptions with reality checks
+- Pragmatic, realistic recommendations
+- Considering implementation risks and mitigation
+
+Red flags:
+- Only stating the obvious without insight
+- Solutions that are impractical
+- No consideration of risks or next steps
+
+## GOOD PROBING QUESTIONS TO ASK
+- "Why do you think that?"
+- "What else could explain this?"
+- "How would you prioritize these?"
+- "Walk me through your calculation"
+- "What are the risks of that approach?"
+- "So what does that mean for our client?"
+- "What would you need to validate that assumption?"
+- "Is there anything else you'd consider?"
+- "How confident are you in that estimate?"
+"""
+
 # --- GRAPH DISPLAY LOGIC ---
 async def show_graph(room, graph_config):
     """Send a graph to the frontend for display."""
@@ -54,18 +141,32 @@ async def generate_feedback(formatted_history, llm_instance):
     system_prompt = """
     You are a senior BCG interviewer grading a candidate. 
     Review the transcript below.
-    CRITICAL: Check if their verbal math matches the correct answers
+    CRITICAL: Check if their verbal math matches the correct answers.
     
-    SCORING GUIDELINES:
-    - 9-10: Excellent performance, minor or no issues
-    - 7-8: Good performance, met expectations with small areas for improvement
-    - 5-6: Average performance, some gaps but acceptable
-    - 3-4: Below expectations, significant issues
-    - 1-2: Poor performance, major problems
+    SCORING GUIDELINES (8/10 is passing):
+    - 9-10: Exceptional - exceeds expectations in all areas
+    - 7-8: Strong - meets expectations with minor gaps (PASSING)
+    - 5-6: Average - some gaps but shows potential
+    - 3-4: Below expectations - significant issues
+    - 1-2: Poor - major problems in fundamentals
     
     Be generous but fair. If the candidate demonstrated good structure, correct math, 
     and clear communication, scores should be 7-9. Only give low scores (below 5) 
     for significant mistakes or missing key elements.
+    
+    EVALUATION CRITERIA:
+    
+    1. STRUCTURED THINKING: Did they break down the problem logically? Use a clear framework? 
+       Prioritize the right issues? Follow an 80/20 approach?
+    
+    2. DATA PROCESSING: Were calculations accurate? Did they structure math clearly? 
+       Sanity check results? Connect data points across the case?
+    
+    3. COMMUNICATIONS: Did they share their thinking? Engage with the interviewer? 
+       Highlight key insights? Support conclusions with arguments?
+    
+    4. BUSINESS SENSE & CREATIVITY: Did they show "so what" thinking? Propose creative solutions? 
+       Consider risks and implementation? Think from multiple perspectives?
     
     Return ONLY a JSON object:
     {
@@ -75,7 +176,7 @@ async def generate_feedback(formatted_history, llm_instance):
         "Structured Thinking": {"score": 0, "comment": "..."},
         "Data Processing": {"score": 0, "comment": "..."},
         "Communications": {"score": 0, "comment": "..."},
-        "Creativity": {"score": 0, "comment": "..."}
+        "Business Sense & Creativity": {"score": 0, "comment": "..."}
       }
     }
     """
@@ -135,18 +236,23 @@ async def run_grading_task(history_text, room):
 async def entrypoint(ctx: JobContext):
     await ctx.connect()
     participant = await ctx.wait_for_participant()
+
+        # DEBUG LINES
+    log(f"--- RAW PARTICIPANT METADATA: {participant.metadata} ---")
+    log(f"--- METADATA TYPE: {type(participant.metadata)} ---")
     
     selected_case_id = "phighting_phillies"
     if participant.metadata:
         try:
             meta = json.loads(participant.metadata)
+            log(f"--- PARSED META: {meta} ---")
             selected_case_id = meta.get("selectedCase", "phighting_phillies")
-        except: pass
-
+        except Exception as e:
+            log(f"--- METADATA PARSE ERROR: {e} ---")
+    
+    log(f"--- FINAL SELECTED CASE: {selected_case_id} ---")
     case_data = CASE_LIBRARY.get(selected_case_id, CASE_LIBRARY["phighting_phillies"])
-    print(f"--- LOADING CASE: {case_data['title']} ---")
-
-    # Track which graphs have been shown
+    log(f"--- LOADED CASE TITLE: {case_data['title']} ---")    # Track which graphs have been shown
     shown_graphs = set()
 
     # Build exhibit info for the LLM
@@ -173,6 +279,8 @@ async def entrypoint(ctx: JobContext):
     ROLE: You are Brian, a BCG Manager. 
     You are interviewing a candidate for an Associate position. 
     Your personality is professional, slightly challenging, but fair.
+
+    {INTERVIEWER_BEST_PRACTICES}
     
     --- CASE CONTEXT ---
     TITLE: {case_data['title']}
@@ -280,7 +388,7 @@ async def entrypoint(ctx: JobContext):
 
     await asyncio.sleep(1.0)
     
-    greeting_text = f"Hi, I'm Brian. I am your interviewer today and I look forward to our case discussion. Diving into the case, {case_data['prompt']['context']}The client wants us to {case_data['prompt']['objective']}"
+    greeting_text = f"Hi, I'm Brian. I am your interviewer today and I look forward to our case discussion. Diving into the case, {case_data['prompt']['context']} The client wants us to {case_data['prompt']['objective']}"
     await session.generate_reply(instructions=f"Say exactly this: '{greeting_text}'")
 
 if __name__ == "__main__":
