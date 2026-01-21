@@ -4,9 +4,17 @@ CASE_LIBRARY = {
         "title": "Phighting Phillies",
         "industry": "Sports",
         "difficulty": "Hard",
+        "source": "Wharton 2017 casebook",
+        "graphs": {
+    "unique_graph_key": {
+        "image_url": "/case-images/phighting_phillies_synergy.png",      # REQUIRED: Path to image
+        "trigger_phrase": "i'm now showing you an exhibit on potential synergies", # REQUIRED: Exact phrase (lowercase)
+        "display_prompt": "Here is the graph for synergy analysis. What do you observe?",         # REQUIRED: Shown to candidate
+    }
+},
         "prompt": {
             "context": "Our client, Alpha Capital, is a private equity firm considering buying the Philadelphia Phillies. The current team owners approached Alpha about purchasing the team for $1.1B.",
-            "objective": "Alpha engaged our firm in the due diligence process and wants us to help them understand what is the team worth and should they make this investment."
+            "objective": "Understand what is the team worth and should they make this investment."
         },
         #HAND-TUNED SCRIPT---
         "interviewer_guide": """
@@ -60,14 +68,20 @@ CASE_LIBRARY = {
             - Ask brainstorm question if candidate did not interpret the valuation and mention synergy; "If the value is lower than the price, what are some ways this deal could still make sense?"
 
         PHASE 3: SYNERGY CALCULATIONS (The Brain Teaser)
-        - Provide these ONLY if they mentioned increasing valuation through synergies:
-            - Revenue synergies: ask the candidate to brainstorm revenue synergies before giving them the answer
-            * Dynamic Ticket Pricing: 4% boost to total revenue (give this data to the interviewee)
-            * Media Deal Renegotiation: 3% boost to total revenue (same as above)
-            * Attract higher value sponsors: 2% boost to total revenue (same as above)
-            * Revamped concessions offerings: 1% boost to total revenue (same as above)
+        - When the candidate mentions synergies or improving valuation:
+        1. First, ask them to brainstorm potential revenue and cost synergies for Phillies
+        2. After they share their ideas, say EXACTLY: 
+           "Great thinking. I'm now showing you an exhibit on potential synergies."
+        3. The system will display a graph. Ask: "What insights can you draw from this?"
+        5. Wait for them to say their insights. After their interpretation, continue with the synergy calculations.
+        - Synergy calculations:
+            - Revenue synergies:
+            * Dynamic Ticket Pricing: 4% boost to total revenue
+            * Media Deal Renegotiation: 3% boost to total revenue
+            * Attract higher value sponsors: 2% boost to total revenue
+            * Revamped concessions offerings: 1% boost to total revenue
             Total revenue synergies realized: 10%*$300m=$30m (candidate should calculate this number themselves)
-            - Cost synergies: ask the candidate to brainstorm cost synergies before giving answer
+            - Cost synergies:
             * Sales and advertising Efficiency: Lowering costs to league benchmarks to acheieve an overall cost reduction of $10m (give this number to the interviewee)
             - Valuation increase from synergies (do not proactively tell the candidate how to calculate, let them figure it out themselves)
             (Revenue synergies + cost synergies)/discount rate: ($30m+$10m)/10%=$400m (interviewee should calculate this number)
@@ -117,6 +131,7 @@ CASE_LIBRARY = {
         "title": "Kellogg in India",
         "industry": "Higher Education",
         "difficulty": "Medium/Hard",
+        "source": "Kellogg 2016 Casebook",
         "prompt": {
             "context": "The Dean of Kellogg is considering starting a satellite campus in India to capitalize on the fast-growing economy and demand for business education.",
             "objective": "Determine if Kellogg should enter the Indian market and if the campus can break even within 4 years."
@@ -142,53 +157,11 @@ CASE_LIBRARY = {
         }
     },
 
-    "kellogg_india": {
-        "title": "Kellogg in India",
-        "industry": "Education",
-        "difficulty": "Medium/Hard",
-        "source": "Kellogg 2016 Casebook, Case 2",
-        "prompt": {
-            "context": "The Dean of Kellogg is considering starting a satellite campus in India to capitalize on the fast-growing economy and demand for business education.",
-            "objectives": [
-                "Determine if Kellogg should enter the Indian market.",
-                "Determine if the campus can break even within 4 years."
-            ]
-        },
-        "market_sizing": {
-            "interviewer_guide": "Ask the candidate to determine the market size. Guide them to a 'Bottom-Up' approach based on the intake of competitor schools (IIM and ISB) rather than a generic population approach.",
-            "competitor_data": {
-                "IIM_pipeline": "500,000 applicants -> Top 6% interviewed (30,000) -> 1 in 5 accepted (6,000 eligible).",
-                "ISB_pipeline": "1,400 matriculated students / 70% yield = 2,000 eligible students."
-            },
-            "math_logic": {
-                "total_addressable_market": "6,000 (IIM) + 2,000 (ISB) = 8,000 high-quality applicants.",
-                "pricing_assumption": "$50,000 per year (Midpoint between IIM's $20k and US's $70k).",
-                "total_market_value": "8,000 students * $50,000 * 2 years = $800M."
-            }
-        },
-        "financials": {
-            "interviewer_guide": "Ask the candidate to calculate the P&L for the first 4 years. Instruct them to assume a target market share of 7.5% in the launch year.",
-            "assumptions": {
-                "year_1_students": "7.5% of 8,000 = 600 students.",
-                "investment": "$150M upfront.",
-                "costs": "$30M/year fixed, drops to $20M in Year 4."
-            },
-            "breakeven_timeline": {
-                "year_1": "600 students. Rev: $30M. Cost: $30M. Profit: $0.",
-                "year_2": "1200 students (600 new + 600 returning). Rev: $60M. Cost: $30M. Profit: $30M.",
-                "year_3": "1500 students (900 new + 600 returning). Rev: $75M. Cost: $30M. Profit: $45M.",
-                "year_4": "1800 students. Rev: $90M. Cost: $20M. Profit: $70M.",
-                "cumulative_profit": "-$5M ($145M total profit - $150M investment)."
-            }
-        },
-        "recommendation_criteria": "Proceed. Although it misses the 4-year breakeven by $5M, the trajectory ($70M profit in Y4) is highly positive. Risks: Brand dilution."
-    },
-
     "rotisserie_ranch": {
         "title": "Rotisserie Ranch",
         "industry": "CPG",
         "difficulty": "Moderate",
-        "source": "Kellogg 2016 Casebook, Case 3",
+        "source": "Kellogg 2016 Casebook",
         "prompt": {
             "context": "Rotisserie Ranch, a poultry farmer, supplies grocery chains with chickens for fresh roasting. They are considering launching pre-flavored chickens.",
             "objectives": ["Evaluate whether to introduce pre-flavored chickens."]
@@ -217,10 +190,10 @@ CASE_LIBRARY = {
         "title": "Art Museum",
         "industry": "Arts",
         "difficulty": "Moderate",
-        "source": "Sloan 2011 Casebook, Case 16",
+        "source": "Sloan 2011 Casebook",
         "prompt": {
             "context": "An NYC art museum normally contributes $150k to a fund annually but only contributed $75k last year. They want to fix this.",
-            "objectives": ["Restore the full $150k annual contribution."]
+            "objectives": ["Find ways to restore the full $150k annual contribution."]
         },
         "clarifying_info": {
             "interviewer_guide": "If asked about revenue streams, ask them to brainstorm the revenue streams first; then ensure they identify: Membership, Admissions, and Grants/Sponsors.",
@@ -247,7 +220,7 @@ CASE_LIBRARY = {
         "title": "Pharmacy in Supermarket",
         "industry": "Retail",
          "difficulty": "Easy/Medium",
-        "source": "Sloan 2011 Casebook, Case 5",
+        "source": "Sloan 2011 Casebook",
         "prompt": {
             "context": "A friend owns a supermarket and wants to add a pharmacy corner. He requires a 2-year payback period.",
             "objectives": ["Determine if he should open the pharmacy."]
