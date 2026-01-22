@@ -1372,5 +1372,189 @@ CASE_LIBRARY = {
             "recommendation": "Did they recommend NOT doing the sponsorship? Did they suggest alternative ways to reach the NASCAR demographic?"
         }
     },
+    "paper_company": {
+        "title": "Paper Company Cost Reduction",
+        "industry": "Chemicals",
+        "difficulty": "Medium",
+        "source": "Yale 2013 Casebook",
+        "graphs": {
+            "production_costs": {
+                "image_url": "/case-images/paper_company_exhibit1.png",
+                "trigger_phrase": "i'm now showing you exhibit 1 on costs of producing different types of paper",
+                "display_prompt": "Here are the costs of producing different types of paper. What do you observe?"
+            },
+            "supplier_data": {
+                "image_url": "/case-images/paper_company_exhibit2.png",
+                "trigger_phrase": "i'm now showing you exhibit 2 on the client's contracted suppliers of dyes",
+                "display_prompt": "Here is information about the client's contracted suppliers of dyes. What can you calculate from this?"
+            }
+        },
+        "prompt": {
+            "context": "Our client is a global company that specializes in manufacturing different types of paper. They wish to reduce costs and would like to know the best way to do so.",
+            "objective": "Advise the client on how to reduce costs. Specifically, determine if it is possible for them to reduce costs by 25%."
+        },
+        "interviewer_guide": """
+        CASE OVERVIEW:
+        - The candidate needs to identify the major cost drivers and evaluate whether a 25% cost reduction is achievable
+        - Key insight: Dyeing is the largest cost component, but achieving 25% overall cost reduction would require an unrealistic ~50% discount from suppliers
+        - The case tests cost analysis, supplier economics, and practical business judgment
+
+        CLARIFYING INFORMATION (provide only when asked):
+        - Paper types: The company makes 2 types of paper which are white and colored
+        - Manufacturing: Our client has all the machinery for the entire manufacturing process, but they buy materials and dyes from various suppliers
+        - Production volume for different paper types: They produce equal quantities of white and colored paper
+        - Fixed costs: Fixed costs like machinery and rent cannot easily be reduced in the short run
+
+        PHASE 1: FRAMEWORK SETUP
+        - A good framework should include:
+            * Fixed costs: Machinery, Rent
+            * Variable costs: Wages, Transportation, Packaging, Warehousing, Inventory
+            * Supplier costs: Materials, Dyes
+            * Logistical costs
+
+        PHASE 2: BRAINSTORMING COST FACTORS
+        - Ask: "What factors may be contributing to high production costs for paper?"
+        
+        GOOD ANSWERS should include:
+        - Outdated machinery – high costs for maintenance
+        - Increases in rent
+        - High labor costs
+        - Increasing costs of woods or dyes
+        - Logistical inefficiencies – sales moving online; client not adapted to new distribution web
+
+        PHASE 3: MAJOR COST ANALYSIS (EXHIBIT 1)
+        - Ask: "What are the major costs for our client?"
+        - Say EXACTLY: "I'm now showing you Exhibit 1 on costs of producing different types of paper"
+        
+        EXHIBIT 1 DATA:
+        Cost/kg of paper ($):
+        |                  | White | Colored |
+        |------------------|-------|---------|
+        | Materials        | 1     | 1       |
+        | Dyeing           | 7     | 9       |
+        | Packaging        | 2     | 3       |
+        | Storage          | 1     | 1       |
+        | Inventory        | 1     | 1       |
+        | Other processes  | 2     | 3       |
+        | TOTAL            | 14    | 18      |
+        
+        Average cost per kg = (14 + 18) / 2 = $16/kg
+        But since equal quantities, total cost contribution per kg of output = $32/kg for both combined
+        
+        KEY INSIGHT: For both white and colored papers, the dyeing process contributes the most to costs. Our client should look into ways to reduce costs for the dyes.
+
+        PHASE 4: SUPPLIER COST ANALYSIS (EXHIBIT 2)
+        - Ask: "How much does our client spend per kg on white and colored dyes?"
+        - Say EXACTLY: "I'm now showing you Exhibit 2 on the client's contracted suppliers of dyes"
+        
+        EXHIBIT 2 DATA:
+        Price/kg of dye ($) and % of client's dye purchase:
+        | Supplier | White Price | Colored Price | White % | Colored % |
+        |----------|-------------|---------------|---------|-----------|
+        | A        | 100         | 160           | 5%      | 10%       |
+        | B        | 80          | 120           | 40%     | 40%       |
+        | C        | 90          | 130           | 10%     | 20%       |
+        | D        | 100         | 140           | 5%      | 20%       |
+        | E        | 75          | 150           | 40%     | 10%       |
+        
+        CALCULATION (let candidate work through):
+        Weighted cost per kg = Σ(price/kg × % of purchase)
+        
+        White dye:
+        - A: 100 × 5% = $5
+        - B: 80 × 40% = $32
+        - C: 90 × 10% = $9
+        - D: 100 × 5% = $5
+        - E: 75 × 40% = $30
+        - Total White: $81/kg
+        
+        Colored dye:
+        - A: 160 × 10% = $16
+        - B: 120 × 40% = $48
+        - C: 130 × 20% = $26
+        - D: 140 × 20% = $28
+        - E: 150 × 10% = $15
+        - Total Colored: $133/kg
+        
+        TOTAL DYE COST: $81 + $133 = $214/kg
+
+        PHASE 5: COST REDUCTION FEASIBILITY
+        - After candidate calculates dye costs, prompt them to brainstorm ideas to reduce costs
+        - Lead them toward: "They can shift to purchasing all of their dyes from a single supplier and try to negotiate a discount"
+        
+        - Ask: "Our client would like to purchase all of their dyes from supplier B. How much discount should they negotiate per kg of dye in order to achieve an overall 25% reduction in costs?"
+        
+        CALCULATION (let candidate work through):
+        - Currently, the cost to produce paper is $32/kg (white $14 + colored $18, but this represents cost per kg when producing both)
+        - Actually: Average cost = $16/kg per paper type. Total for both = $32/kg
+        - To achieve 25% reduction: need to cut costs by $32 × 25% = $8/kg
+        - Currently, white and colored dyes together contribute $16/kg to paper costs ($7 + $9 from Exhibit 1)
+        - So need to cut dye costs by $8/$16 = 50%
+        - Currently paying $214/kg of dye → needs to be reduced to $107/kg
+        - If buying both dyes from Supplier B: $80 + $120 = $200/kg
+        - For dye cost to reach $107/kg: discount needed = ($200 - $107) / $200 = 46.5%
+        
+        KEY INSIGHT: Obtaining a near 50% discount from Supplier B is unrealistic.
+
+        PHASE 6: RISK ASSESSMENT
+        - Ask: "What risks are involved in our client's proposed strategy of buying from a single supplier?"
+        
+        GOOD ANSWERS should include:
+        - Putting all eggs in one basket – relying entirely on Supplier B for dyes
+        - Supplier B may not have enough capacity
+        - Supplier B may increase their pricing at any time, leading to higher costs
+        - Going from one supplier to two later is much harder than going from two to three
+
+        PHASE 7: RECOMMENDATION
+        - Ask for a final recommendation
+        
+        GOOD RECOMMENDATION should include:
+        - Purchasing dyes from one supplier is NOT a good option
+        - Cutting costs by 25% is NOT achievable in the short run
+        - Instead, recommend:
+            * Make purchases from 2 or 3 of the cheaper suppliers (B and E for white; B for colored)
+            * This achieves a smaller cost reduction but mitigates single-supplier risk
+            * Negotiate volume discounts with preferred suppliers
+            * Explore other cost reduction opportunities beyond dyes
+
+        RULES:
+        - Be professional but challenging
+        - This is a McKinsey Round 2 case - expect structured thinking and clear math
+        - Let the candidate drive the analysis
+        - Provide exhibits only when candidate asks for relevant data
+        - Make sure candidate recognizes that 25% cost reduction is unrealistic
+        - Push for clear calculations and practical recommendations
+        """,
+        "financial_data": {
+            "white_paper_cost": "$14/kg (Materials $1, Dyeing $7, Packaging $2, Storage $1, Inventory $1, Other $2)",
+            "colored_paper_cost": "$18/kg (Materials $1, Dyeing $9, Packaging $3, Storage $1, Inventory $1, Other $3)",
+            "total_cost_per_kg": "$32/kg for both types combined",
+            "current_white_dye_cost": "$81/kg",
+            "current_colored_dye_cost": "$133/kg",
+            "total_dye_cost": "$214/kg"
+        },
+        "math_benchmarks": {
+            "white_dye_weighted_cost": "$81/kg (A:$5 + B:$32 + C:$9 + D:$5 + E:$30)",
+            "colored_dye_weighted_cost": "$133/kg (A:$16 + B:$48 + C:$26 + D:$28 + E:$15)",
+            "cost_reduction_target": "$8/kg (25% of $32)",
+            "dye_cost_reduction_needed": "50% ($8/$16 dye contribution)",
+            "supplier_b_combined_price": "$200/kg ($80 white + $120 colored)",
+            "discount_needed_from_b": "46.5% (to reach $107/kg from $200/kg)"
+        },
+        "clarifying_info": {
+            "paper_types": "White and colored paper in equal quantities",
+            "manufacturing": "Client has machinery but buys materials and dyes from suppliers",
+            "fixed_costs": "Cannot be easily reduced in short run",
+            "suppliers": "5 suppliers (A, B, C, D, E) with different prices and purchase percentages"
+        },
+        "rubric": {
+            "structure": "Did they create a framework covering fixed costs, variable costs, and supplier costs?",
+            "cost_analysis": "Did they correctly identify dyeing as the largest cost component from Exhibit 1?",
+            "supplier_math": "Did they correctly calculate weighted dye costs ($81 white, $133 colored, $214 total)?",
+            "feasibility": "Did they correctly calculate that ~46.5% discount is needed and recognize this is unrealistic?",
+            "risks": "Did they identify risks of single-supplier strategy (capacity, pricing power, dependency)?",
+            "recommendation": "Did they recommend against single supplier and suggest using 2-3 cheaper suppliers instead?"
+        }
+    },
 }
 
