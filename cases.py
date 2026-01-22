@@ -151,7 +151,7 @@ CASE_LIBRARY = {
         },
         "prompt": {
             "context": "Our client is the Dean of Kellogg School of Management. She has hired you to advise her on an idea which struck her during the previous week – to consider starting a satellite campus of Kellogg in India.",
-            "objective": "Whether Kellogg should enter the Indian market with a satellite campus."
+            "objective": "Determine whether Kellogg should enter the Indian market with a satellite campus."
         },
         "interviewer_guide": """
         CASE OVERVIEW:
@@ -846,7 +846,7 @@ CASE_LIBRARY = {
         },
         "prompt": {
             "context": "Our client is a large national health care payer (so think of a health insurance company like Aetna) exploring the launch of a new disease management program to better serve its 5 million members. The idea is to hire and train a team of Health Coaches to specialize in a single disease area such as heart disease or diabetes. Each Coach will manage a portfolio of patients to reduce the costs of overall health expenditures through reminders to take drugs, providing limited medical advice, and suggested diet. Studies show that once a month contact with each patient reduces health spending by 5% on average.",
-            "objective": "Should they launch the program? And if so, what steps should it take?"
+            "objective": "Figure out if they should launch the program? And if so, what steps should it take?"
         },
         "interviewer_guide": """
         CASE OVERVIEW:
@@ -1110,7 +1110,7 @@ CASE_LIBRARY = {
         },
         "prompt": {
             "context": "Princeton-Plainsboro Hospital is a large single-site hospital in New Jersey serving a wide range of patients. The hospital's board is concerned because they have noticed a decline in the hospital's earnings from medical services even though the number of patients has remained static.",
-            "objective": "Help the hospital figure out what the problem is and come up with a strategy for increasing earnings."
+            "objective": "Figure out what the problem is and come up with a strategy for increasing earnings."
         },
         "interviewer_guide": """
         CASE OVERVIEW:
@@ -1391,7 +1391,7 @@ CASE_LIBRARY = {
         },
         "prompt": {
             "context": "Our client is a global company that specializes in manufacturing different types of paper. They wish to reduce costs and would like to know the best way to do so.",
-            "objective": "Advise the client on how to reduce costs. Specifically, determine if it is possible for them to reduce costs by 25%."
+            "objective": "Advise them on how to reduce costs. Specifically, determine if it is possible for them to reduce costs by 25%."
         },
         "interviewer_guide": """
         CASE OVERVIEW:
@@ -1554,6 +1554,176 @@ CASE_LIBRARY = {
             "feasibility": "Did they correctly calculate that ~46.5% discount is needed and recognize this is unrealistic?",
             "risks": "Did they identify risks of single-supplier strategy (capacity, pricing power, dependency)?",
             "recommendation": "Did they recommend against single supplier and suggest using 2-3 cheaper suppliers instead?"
+        }
+    },
+    "baby_helmets": {
+        "title": "Baby Helmets Market Entry",
+        "industry": "Industrialss",
+        "difficulty": "Medium",
+        "source": "Yale 2013 Casebook",
+        "graphs": {
+            "helmet_data": {
+                "image_url": "/case-images/baby_helmets_exhibit1.png",
+                "trigger_phrase": "i'm now showing you exhibit 1 on need for baby helmets by age group",
+                "display_prompt": "Here is data on the need for baby helmets by age group, including pricing and costs. What can you calculate from this?"
+            }
+        },
+        "prompt": {
+            "context": "Our client is a manufacturer of casts and supports used in correcting bone structure. They recently developed 3 new baby helmets and would like to know if they should launch one or more of these products onto the market.",
+            "objective": "Determine if a target profit of $1 million a year is reasonable for this market entry."
+        },
+        "interviewer_guide": """
+        CASE OVERVIEW:
+        - The candidate needs to estimate market size and determine if $1M annual profit target is achievable
+        - Key insight: $1M profit requires >42% market share, which is unrealistic given two major competitors with 60% combined share
+        - The case tests market sizing, profitability analysis, and strategic thinking
+
+        CLARIFYING INFORMATION (provide only when asked):
+        - Timeline: Our client wishes to reach the target profit of $1 million within the first year
+        - Manufacturing: Our client takes care of the entire manufacturing process themselves
+        - Product use: Baby helmets are used to correct the shape of the skull
+        - Usage pattern: Helmets are once-use for a duration of a month; a baby will only need to use a correctional helmet once in his/her life
+        - Product portfolio: Our client has developed one product in each of the 3 categories of helmets (strong, medium, and weak)
+        - Competition: The current market for baby helmets is dominated by 2 major players, each with ~30% market share (60% combined)
+        - US Population: 320 million
+
+        PHASE 1: FRAMEWORK SETUP
+        - A good framework should include:
+            * Market factors: Consumers, Competition, Alternatives
+            * Profitability: Revenue (# units × price) and Costs (# units × cost)
+        
+        - Ask: "What factors should our client consider in deciding whether or not to enter the market?"
+        - This is a brainstorming question - look for case-specific factors
+        - Good answers should dive into competition (e.g., how well do competitor's helmets work?)
+
+        PHASE 2: MARKET SIZING
+        - Ask: "Please estimate the market size for baby helmets."
+        
+        MARKET SIZE CALCULATION (let candidate work through):
+        Step 1: Estimate number of live births
+        - US population = 320 million
+        - Life expectancy = ~80 years
+        - Number of live births = 320M / 80 = 4 million per year
+        
+        Step 2: After candidate estimates births, say EXACTLY:
+        "I'm now showing you Exhibit 1 on need for baby helmets by age group"
+        
+        EXHIBIT 1 DATA:
+        | Age Group   | % Skull Developed | % Need Helmet | Helmet Type | Avg Price | Avg Cost |
+        |-------------|-------------------|---------------|-------------|-----------|----------|
+        | 0-3 months  | 20%               | 2%            | Strong      | $180      | $140     |
+        | 3-6 months  | 40%               | 1.2%          | Medium      | $150      | $90      |
+        | 6-9 months  | 60%               | 0.4%          | Weak        | $120      | $15      |
+        | 9-12 months | 70%               | 0.4%          | Weak        | $120      | $15      |
+        
+        Step 3: Calculate total market demand
+        - 4 age groups, so ~1 million babies per age group
+        - Babies needing helmets = 1M×2% + 1M×1.2% + 1M×0.4% + 1M×0.4% = 40,000 babies/year
+        - Since each baby needs only 1 helmet: 40,000 helmets/year total market
+
+        PHASE 3: PROFITABILITY ANALYSIS
+        - Ask: "Is a target profit of $1 million a year realistic?"
+        
+        CALCULATION (let candidate work through):
+        Step 1: Calculate gross margin for each product
+        - Strong helmets: $180 - $140 = $40 margin
+        - Medium helmets: $150 - $90 = $60 margin
+        - Weak helmets: $120 - $15 = $105 margin
+        
+        Step 2: Calculate total profit potential for entire market (100% share)
+        - Strong helmets: $40 × 1M × 2% = $0.8M
+        - Medium helmets: $60 × 1M × 1.2% = $0.72M
+        - Weak helmets: $105 × 1M × 0.4% × 2 (two age groups) = $0.84M
+        - Total market profit = $0.8M + $0.72M + $0.84M = $2.36M
+        
+        Step 3: Calculate required market share for $1M profit
+        - Required share = $1M / $2.36M = 42.4%
+        
+        KEY INSIGHT: 
+        - To reach $1M profit, client needs >42% market share
+        - Two major players already have 60% combined (30% each)
+        - Achieving >42% share is NOT realistic for a new entrant
+        - Therefore, $1M target profit is NOT reasonable
+
+        PHASE 4: REALISTIC TARGET
+        - Ask: "Assuming that our client can get a maximum market share of 20%, what would be a more reasonable target profit? What can they do to achieve it?"
+        
+        CALCULATION:
+        - At 20% share: $2.36M × 20% = $0.472M
+        - More realistic target: ~$0.4M (or approximately $400K-$500K)
+        
+        STRATEGIES TO ACHIEVE TARGET:
+        - Launch all three helmet types at once to maximize addressable market
+        - Consider lowering prices to drive sales volume against established competitors
+        - Look to reduce costs, especially for strong helmets (outsource manufacturing or negotiate with suppliers)
+
+        PHASE 5: RISK ASSESSMENT
+        - Ask: "What risks are associated with your proposed strategy?"
+        
+        GOOD ANSWERS should include:
+        - 20% market share assumption may be overly ambitious, especially in initial launch stages
+        - Launching all 3 products at once increases chances of one product failing
+        - If client isn't concerned with immediately maximizing profit, could launch products one at a time
+        - Price competition could erode margins
+        - Competitors may respond aggressively to new entrant
+
+        PHASE 6: RECOMMENDATION
+        - Ask for a final recommendation
+        
+        GOOD RECOMMENDATION should include:
+        - $1 million target is NOT realistic
+        - Even with all 3 products and 20% market share, profit would be ~$0.4-0.5M
+        - Recommend launching products one by one to reduce risk
+        - Charge lower-than-average prices initially to drive sales and establish customer base
+        - Increase prices once strong customer base is established
+        - Focus on cost reduction, especially for strong helmets where margin is lowest
+
+        RULES:
+        - Be professional but challenging
+        - This is an L.E.K. Round 2 case - expect structured thinking
+        - Let the candidate drive the market sizing
+        - Provide exhibit only after candidate estimates number of births
+        - Make sure candidate recognizes that $1M profit target is unrealistic
+        - Push for specific numbers in calculations
+        """,
+        "financial_data": {
+            "us_population": "320 million",
+            "life_expectancy": "~80 years",
+            "annual_births": "4 million (320M / 80)",
+            "babies_per_age_group": "1 million",
+            "total_helmets_needed": "40,000 per year",
+            "competitor_share": "Two major players with ~30% each (60% combined)"
+        },
+        "market_sizing": {
+            "strong_helmet_demand": "1M × 2% = 20,000 units (0-3 months)",
+            "medium_helmet_demand": "1M × 1.2% = 12,000 units (3-6 months)",
+            "weak_helmet_demand": "1M × 0.4% × 2 = 8,000 units (6-12 months)",
+            "total_market": "40,000 helmets per year"
+        },
+        "math_benchmarks": {
+            "strong_margin": "$40 ($180 - $140)",
+            "medium_margin": "$60 ($150 - $90)",
+            "weak_margin": "$105 ($120 - $15)",
+            "strong_profit_potential": "$0.8M ($40 × 20,000)",
+            "medium_profit_potential": "$0.72M ($60 × 12,000)",
+            "weak_profit_potential": "$0.84M ($105 × 8,000)",
+            "total_market_profit": "$2.36M",
+            "share_needed_for_1m": "42.4% ($1M / $2.36M)",
+            "profit_at_20_percent_share": "$0.472M ($2.36M × 20%)"
+        },
+        "clarifying_info": {
+            "product_use": "Corrects skull shape; once-use for one month duration",
+            "usage_frequency": "Baby only needs helmet once in lifetime",
+            "manufacturing": "Client handles entire manufacturing process",
+            "competition": "Two major players with 30% share each"
+        },
+        "rubric": {
+            "structure": "Did they create a framework covering market factors (consumers, competition) and profitability (revenue, costs)?",
+            "market_sizing": "Did they correctly estimate 4M births and calculate 40,000 helmets needed per year?",
+            "profitability": "Did they correctly calculate margins ($40, $60, $105) and total market profit ($2.36M)?",
+            "feasibility": "Did they recognize that 42% share is unrealistic and $1M target is not achievable?",
+            "realistic_target": "Did they calculate ~$0.4-0.5M as realistic profit at 20% share?",
+            "recommendation": "Did they recommend phased launch, competitive pricing, and cost reduction strategies?"
         }
     },
 }
