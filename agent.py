@@ -31,6 +31,14 @@ load_dotenv()
 
 server = AgentServer()
 
+# --- PRE-WARM MODELS AT STARTUP ---
+log("=== PRE-WARMING MODELS ===")
+_vad = silero.VAD.load()
+_stt = openai.STT()
+_llm = openai.LLM(model="gpt-4o-mini")
+_tts = openai.TTS()
+log("=== MODELS PRE-WARMED ===")
+
 # --- INTERVIEWER BEST PRACTICES (FROM KELLOGG CASEBOOK) ---
 INTERVIEWER_BEST_PRACTICES = """
 --- INTERVIEWER BEST PRACTICES ---
@@ -324,11 +332,12 @@ async def entrypoint(ctx: JobContext):
     {json.dumps(case_data.get('interviewer_guide', ''), indent=2)}
     """
 
+    # Use pre-warmed models instead of loading new ones
     session = AgentSession(
-        vad=silero.VAD.load(),
-        stt=openai.STT(),
-        llm=openai.LLM(model="gpt-4o-mini"), 
-        tts=openai.TTS(),
+        vad=_vad,
+        stt=_stt,
+        llm=_llm, 
+        tts=_tts,
         min_endpointing_delay=0.5
     )
     
