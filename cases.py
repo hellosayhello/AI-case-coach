@@ -3,7 +3,7 @@ CASE_LIBRARY = {
     "phighting_phillies": {
         "title": "Phighting Phillies",
         "industry": "Sports",
-        "difficulty": "Hard",
+        "difficulty": "Medium",
         "source": "Wharton 2017 casebook",
         "graphs": {
     "unique_graph_key": {
@@ -130,7 +130,7 @@ CASE_LIBRARY = {
     "kellogg_india": {
         "title": "Kellogg India Expansion",
         "industry": "Education",
-        "difficulty": "Hard",
+        "difficulty": "Medium",
         "source": "Kellogg 2016 Casebook",
         "graphs": {
             "b_schools_india": {
@@ -162,10 +162,11 @@ CASE_LIBRARY = {
         CLARIFYING INFORMATION (provide only if asked):
         - Strategic rationale: India is one of the fastest growing economies with huge demand for business education. Dean believes it would help Kellogg move to Top 3. She wants the satellite campus to breakeven in 4 years.
         - Quality: The quality of students and selection procedure would be comparable to current standards - no compromise on quality to increase revenue.
-        - Local competition: India has its own top-tier schools - 7 Indian Institutes of Management (IIM) and the Indian School of Business (ISB). ISB has a tie-up with Kellogg for its pedagogy.
+        - Local competition: India has its own top-tier schools - Indian Institutes of Management (IIM) and the Indian School of Business (ISB). ISB has a tie-up with Kellogg for its pedagogy.
         - Selection process: IIMs admit based on Common Admission Test (CAT). ISB admits based on GMAT.
         - Cost comparison: MBA in India costs about $20,000/year vs $70,000 at Kellogg Evanston. Indian schools don't offer many scholarships but banks offer generous educational loans.
-        - Programs: Only the 2-Year MBA program to start with.
+        - Programs: Only the 2-Year MBA program to start with
+        - Factors that influence ranking: diversity, international presence, and job placement
 
         MODEL FRAMEWORK should include:
         QUALITATIVE:
@@ -182,7 +183,7 @@ CASE_LIBRARY = {
         PHASE 1: MARKET SIZING
         - Candidate can use top-down or bottom-up approach
         - Bottom-up is preferred (top-down becomes too dependent on assumptions)
-        - When candidate asks for market data, say EXACTLY: "I'm now showing you Exhibit A on B-Schools in India"
+        - When candidate asks for market data, say EXACTLY: "I'm now showing you Exhibit A on B-Schools in India."
         
         EXHIBIT A DATA:
         Indian Institutes of Management (IIMs):
@@ -190,7 +191,7 @@ CASE_LIBRARY = {
         - 500,000 applications every year
         - Top 6% get shortlisted for interview = 30,000 applicants
         - 1 out of 5 are accepted = 6,000 eligible students
-        - 85% of admitted candidates end up joining an IIM
+        - 85% of admitted candidates end up joining IIM
         - Cost: INR 1,200,000 per year (use conversion: 1 USD = 60 INR = $20,000)
         
         Indian School of Business (ISB):
@@ -199,8 +200,9 @@ CASE_LIBRARY = {
         - 1,400 / 70% = 2,000 eligible students
         
         MARKET SIZE CALCULATION:
+        - Before the calculation, remind the candidate that we are only interested in the number of admitted students, not the number of matriculated students
         - Total Addressable Market = 6,000 (IIM) + 2,000 (ISB) = 8,000 high quality applicants
-        - Fee to charge: Between $20,000 and $70,000 is acceptable. Use $50,000/year for 2 years.
+        - Fee to charge: Between $20,000 and $70,000 is acceptable. Tell candidate to use $50,000/year for 2 years.
         - Market Size = 8,000 x $50,000 x 2 years = $800M
         - This is good enough to proceed ahead
 
@@ -304,7 +306,6 @@ CASE_LIBRARY = {
         - Begin discussions with Indian government for land, infrastructure, licenses
 
         RULES:
-        - This is an interviewee-led case
         - Let candidate drive the market sizing approach
         - Don't hand over exhibits right away - let candidate ask for data
         - Push for both quantitative rigor AND qualitative thinking
@@ -328,9 +329,9 @@ CASE_LIBRARY = {
         },
         "clarifying_info": {
             "strategic_rationale": "Help Kellogg move to Top 3, breakeven in 4 years",
-            "competition": "7 IIMs and ISB (ISB has Kellogg tie-up)",
-            "india_mba_cost": "$20,000/year vs $70,000 at Kellogg",
-            "program": "2-Year MBA only"
+            "competition": "IIMs and ISB are the two main business schools in India",
+            "india_mba_cost": "usually $20,000/year vs $70,000 at Kellogg",
+            "program": "2-Year MBA only to start with"
         },
         "rubric": {
             "structure": "Did they create a framework covering both quantitative (market sizing, costs, revenue) and qualitative factors (brand, rankings, cannibalization)?",
@@ -355,20 +356,22 @@ CASE_LIBRARY = {
         },
         "prompt": {
             "context": "Our client is Rotisserie Ranch, a poultry farming company that specializes in growing chickens for rotisserie roasting. Its primary customer segment is comprised of large grocery chains that buy its chickens to fresh roast in the meat departments of their grocery stores. Market research has revealed that more and more consumers have begun buying flavored rotisserie chickens recently.",
-            "objective": "Whether Rotisserie Ranch should pre-flavor some of its chickens for grocers. Help them determine whether to launch this new product."
+            "objective": "Understand whether Rotisserie Ranch should pre-flavor some of its chickens for grocers. Help them determine whether to launch this new product."
         },
         "interviewer_guide": """
         CASE OVERVIEW:
-        - This is an INTERVIEWER-LED case (McKinsey style)
         - The case tests understanding of new product introduction, market testing, and profitability analysis
         - Key concepts: customer value proposition, demand elasticity, test marketing
         - Four new flavored products being considered: Barbecue, lemon herb, tandori, and teriyaki
 
         CLARIFYING INFORMATION (provide only if asked):
-        Industry/Product Details:
-        - Perishability: Predicting demand for cooked chickens is difficult for grocers
-        - Any leftover cooked chickens at end of day are thrown out
-        - Unthawed chickens cannot be re-frozen
+        - Perishability:
+            * Predicting demand for cooked chickens is difficult for grocers
+            * Any leftover cooked chickens at end of day are thrown out
+            * Unthawed chickens cannot be re-frozen
+        - New flavors: Barbecue, lemon herb, tandori, teriyaki
+        - Patent": client has patented process for sterile packaging - chicken stays fresh 30 days without freezing
+        - Competition": No competition due to patent - competitors must freeze chicken so can't pre-seasoned
         
         Client Characteristics:
         - Competitive Advantage: Client has PATENTED process for sterilely packaging chicken so it remains fresh for 30 days, making freezing unnecessary
@@ -517,15 +520,15 @@ CASE_LIBRARY = {
         - Key concepts: revenue analysis, price elasticity, membership economics, brainstorming strategies
         - The case involves a math problem around membership fee pricing
 
-        PHASE 1: REVENUE SOURCES (Question 1)
-        - Ask: "What are some potential reasons for this decrease?"
+        CLARIFYING INFORMATION (provide only if asked):
+        - What the museum shows: Art museum specializing in 17th and 18th century European arts
+        - Location of the museum: New York City
+        - Museum revenue sources: Membership fees, admission fees, sponsorships/grants
         
-        SUGGESTED ANSWER - Candidate should first lay out revenue sources:
-        - Membership fees
-        - Admission fees
-        - Sponsorships/grants
+        PHASE 1: FRAMEWORK AND BRAINSTORM
+        - A good framework lists out the revenue sources and list out potential reasons for decrease in revenue in each channel and how to fix
         
-        Then identify possible sources of decrease for each:
+        Ask: "Can you brainstorm a few more ideas of potential reasons for decrease in revenue for each revenue source?"
         - Membership fees: lapsed renewals, reduced number of new members
         - Admission fees: lower visitor volume, increased competition from other museums
         - Sponsorships/grants: budget crunches in sponsor organizations
@@ -543,12 +546,6 @@ CASE_LIBRARY = {
         Step 1: Calculate current number of members
         - Annual fund deposit needed: $150K
         - Amount per member entering fund = 75% × $150 = $112.50
-        - Current number of members = $150K / $112.50 = 1,333 members
-        
-        Wait - let me recalculate based on the casebook:
-        - Current number of members = (50% × $150K) / (75% × $150) = $75K / $112.50 = 667 members
-        
-        Actually, the casebook shows:
         - Current number of members = (50% × 150K) / (75% × 150) = 667
         
         Step 2: Calculate with new membership fee
@@ -617,7 +614,6 @@ CASE_LIBRARY = {
             * Consider the museum's brand positioning when making pricing decisions
 
         RULES:
-        - This is an interviewer-led case (McKinsey style)
         - Guide candidate through each question sequentially
         - For the math question, make sure candidate shows their work clearly
         - Push for creative brainstorming in Question 5
@@ -695,14 +691,16 @@ CASE_LIBRARY = {
 
         PHASE 1: PROFITABILITY OF THE PHARMACY
         
-        Market Information (provide when asked):
-        - Supermarket is located in a suburb with population of around 50,000
-        - Population has more or less remained constant for the past decade
-        - Supermarket gets 10,000 customers per month with monthly sales of $1M
-        - There are 3 pharmacies within a two-mile radius - these are the only pharmacies in the suburb
-        - All pharmacies are similar to each other; someone looking for prescription drugs can go to any of these stores
-        - No study specific for the suburb, but on average 50% of US population takes prescription drugs
-        - Monthly drug bills are $50/person
+        CLARIFYING INFORMATION (provide when asked):
+        - Where is the pharmacy in the supermarket: pharmacy will be located in a corner in the supermarket
+        - Supermarket location: located in a suburb with population of around 50,000
+            * Population has more or less remained constant for the past decade
+        - Supermarket revenue and existing customers: gets 10,000 customers per month with monthly sales of $1M
+        - Other pharmarcies: there are 3 pharmacies within a two-mile radius - these are the only pharmacies in the suburb
+            * All pharmacies are similar to each other; someone looking for prescription drugs can go to any of these stores
+        - Drug spending:
+            * On average 50% of US population takes prescription drugs
+            * Monthly drug bills are $50/person
         
         REVENUE CALCULATION (let candidate work through):
         
@@ -755,15 +753,12 @@ CASE_LIBRARY = {
         = 10,000 × 50% × $100 × 1.30
         = $150,000/month in additional grocery sales
         
-        Wait - let me recalculate per the casebook:
-        = 10,000 × 50% × ($1M/10,000) × 1.30 = $150,000/month
-        
-        Interviewer: "Do we have information about the profit margins on the grocery and other products sold at the supermarket?"
+        After the interviewee calculated the incremental sales, say: "I will also give you information on the profit margins on the grocery and other products sold at the supermarket?"
         
         Provide cost structure:
         - For every dollar of sales: Fixed cost = $0.15, COGS = $0.75, Salary of staff = $0.05
         
-        NOTE: Candidate should recognize that only the COGS (variable costs) are relevant in this case since the grocery store will not need to increase fixed costs to sustain the incremental sales.
+        NOTE: Candidate should recognize that only the COGS (variable costs) are relevant in this case since the grocery store will not need to increase fixed costs to sustain the incremental sales from the pharmarc
         
         INCREMENTAL PROFIT CALCULATION:
         - Only relevant cost is COGS (variable cost)
@@ -798,7 +793,6 @@ CASE_LIBRARY = {
         - Guide candidate through market analysis FIRST before profitability
         - Make sure candidate shows clear math work
         - Push candidate to recognize the difference between fixed and variable costs for incremental profitability
-        - The case does not require a formal closing recommendation
         """,
         "financial_data": {
             "suburb_population": "50,000 people",
@@ -986,7 +980,7 @@ CASE_LIBRARY = {
         },
         "prompt": {
             "context": "Our client, a major US television network, is trying to figure out how much to bid for the exclusive right to broadcast the 2018 Winter Olympics Games in the U.S. The Winter Olympics are a huge deal and will require a significant amount of capital to secure the rights.",
-            "objective": "The right bid amount after considering all relevant factors."
+            "objective": "Understand the right bid amount after considering all relevant factors."
         },
         "interviewer_guide": """
         CASE OVERVIEW:
@@ -999,13 +993,14 @@ CASE_LIBRARY = {
         CLARIFYING INFORMATION (provide only if asked):
         - Revenues:
             * No subscription revenue, but can keep 100% of advertising revenue
-            * Ad rates are $400K per 30-second ad for prime time (M-F 7-11 PM, all weekend)
+            * Ad rates are $400K per 30-second ad for prime time (prime time is Monday to Friday 7-11 PM, and all weekend)
             * Ad rates are $200K per 30-second ad for non-prime time
             * Market research has shown you can include no more than 10 minutes of advertising per hour
         - Costs:
             * $482M of total production costs
             * Opportunity cost: $1M per hour (what the network would normally earn)
-            * Time value of money: 4-year lag for receipt of revenue (WACC is 10%)
+            * Time value of money: 4-year lag for receipt of revenue (Weighted Average Cost of Capital is 10%)
+            * Weighted Average Cost of Capital represents the average cost a company is expected to pay to finance its assets
 
         PHASE 1: FRAMEWORK SETUP
         - Candidate should determine that this is a cost-benefit / NPV analysis
@@ -1045,7 +1040,7 @@ CASE_LIBRARY = {
 
         PHASE 4: NPV CALCULATION
         - If candidate doesn't mention time value of money, prompt: "Is there anything else we need to consider before determining our bid?"
-        - WACC: 10%
+        - Weighted Average Cost of Capital: 10%
         - Time lag: 4 years until revenue is received
         - Discount factor: 1.10^4 = 1.4641 (tell candidate to round to 1.50)
         - NPV: $300M / 1.5 = $200M (candidate should calculate)
@@ -1104,7 +1099,7 @@ CASE_LIBRARY = {
     "circling_the_drain": {
         "title": "Circling the Drain",
         "industry": "Healthcare",
-        "difficulty": "Medium",
+        "difficulty": "Hard",
         "source": "Wharton 2023 Casebook",
         "graphs": {
             "revenue_by_insurance": {
@@ -1125,8 +1120,16 @@ CASE_LIBRARY = {
         - The case includes math calculations, brainstorming, and an M&A component
 
         CLARIFYING INFORMATION (provide only if asked):
-        - Patients have a variety of insurance: private insurance, public insurance (Medicare/Medicaid), and uninsured
-        - The hospital provides outpatient services, inpatient surgeries (hips and joints replacement, cosmetic surgery, elective procedures for weight loss), and has a state-of-the-art emergency room, ICU, and Neonatal ICU
+        - Neonatal ICU: an ICU that provides intensive care for critically ill or premature newborns and infants specifically
+        - Types of insurance patients have: Patients have a variety of insurance which includes private insurance, public insurance (such as Medicare or Medicaid), and uninsured
+        - Services the hospital provides: The hospital provides outpatient services, inpatient surgeries (hips and joints replacement, cosmetic surgery, elective procedures for weight loss), and has a state-of-the-art emergency room, ICU, and Neonatal ICU
+        - Definition of single-site hospital: the only source of hospital services in a geographical area
+        - How insurance works: patients pay premium to insurance companies and in exchange insurance companies cover part of patients' medical expenses
+        - Reimbursement rate: hospital usually negotiates reimbursement rates with each insurance company to determine how much the hospital charge for the specific insurance company for different medical expenses; it's common for hospitals to charge different prices for different insurance companies and providers
+        - Private insurance: purchased individually with many people receiving health insurance through their employer, which often covers a portion of the premium cost
+        - Public insurance: public insurance have premiums paid by government and mostly include medicare and medicaid
+        - Medicare: federal health insurance for anyone ages 65 years and older, as well as for younger people with certain disabilities; premiums are sponsored by government
+        - Medicaid: a joint federal and state program that provides health coverage to people with limited income, with premiums sponsored by government
 
         PHASE 1: FRAMEWORK SETUP
         - A good framework should include:
@@ -1171,7 +1174,7 @@ CASE_LIBRARY = {
         Revenue increases:
         - Charge more for services (partner with other hospitals when negotiating reimbursement rates)
         - Marketing to attract more high-margin private insurance patients
-        - Corporate development (M&A or JV) with local specialty clinics serving private insurance patients
+        - Corporate development (M&A or Joint Venture) with local specialty clinics serving private insurance patients
         - Lobby government to raise public reimbursement rates
         
         Cost decreases:
@@ -1182,7 +1185,7 @@ CASE_LIBRARY = {
 
         PHASE 4: ACO ANALYSIS
         - When candidate mentions reducing costs, introduce ACO option:
-        "The hospital is considering partnering with CMS to become part of an Accountable Care Organization (ACO). ACOs typically offer care at lower costs through care coordination, but need to pay out of pocket if patient bills exceed a threshold. For 80% of patients under public insurance, costs will go down by 30%. For the remaining 20%, costs will shoot up to $10,000 per patient. Should the hospital become part of the ACO?"
+        "The hospital is considering partnering with Centers for Medicare and Medicaid Services to become part of an Accountable Care Organization (ACO). ACOs typically offer care at lower costs through care coordination, but need to pay out of pocket if patient bills exceed a threshold. For 80% of patients under public insurance, costs will go down by 30%. For the remaining 20%, costs will shoot up to $10,000 per patient. Should the hospital become part of the ACO?"
         
         CALCULATION:
         - Current per patient cost: $4,800
@@ -1281,18 +1284,17 @@ CASE_LIBRARY = {
         - Key elements are fit with current marketing strategy and profitability
         - Others such as amount of exposure/impressions work as well, but the first two should be touched upon
         
-        - Candidate should ask probing questions about the current marketing strategy:
+        - Candidate should ask probing questions about the current marketing strategy and you should make sure the candidate ask about the current marketing budget; if they do not ask for the current marketing budget proactively, bring it up to them:
         
-        CLARIFYING INFORMATION (provide when asked):
+        CLARIFYING INFORMATION (provide only when asked):
         - Customer: NASCAR audiences do not have a high overlap with people who make household purchasing decisions about toothpaste
-        - Channels: Current marketing channels include TV, radio, print, other sports opportunities, etc.
-        - Budget: The $20M is significant relative to total marketing budget
+        - Marketing channels: Current marketing channels include TV, radio, print, other sports opportunities, etc.
+        - Current marketing budget: The $20M is significant relative to total marketing budget
             * Company has $500M revenue
-            * COGS is 50% of revenue
-            * Let candidate identify and estimate other components (overhead, selling expenses, etc.)
-            * Should drive to discover that $100M (or 20%) of revenue is spent on advertising
-            * Key insight: $20M is a significant portion of budget (20% of ad spend)
-        - Exposures: Discuss how to estimate cost per impression (like a market sizing approach)
+            * Cost Of Goods Sold is 50% of revenue
+            * $100M (or 20%) of revenue is spent on advertising
+            * $20M is a significant portion of budget (20% of ad spend)
+        - Cost: Discuss how to estimate cost per impression (like a market sizing approach)
             * Consider TV and live audience size, number of events, # of top 3 finishes, etc.
             * Compare this cost per impression with other marketing channels
 
@@ -1329,7 +1331,7 @@ CASE_LIBRARY = {
             * Make sure candidate addresses that there are costs beyond the $20M, but don't go in depth
             * Just call it X
             * For the return, make assumptions - doesn't really matter what they are
-            * Come up with incremental revenue of Y
+            * Come up with incremental revenue - doesn't matter what the exact number is as long as the interviewee has valid reasoning behidnd the number
             * While incremental revenue is nice, what's really important is incremental profit
             * Back out COGS to get incremental profit
             * ROI will likely be quite small or possibly negative depending on numbers and assumptions

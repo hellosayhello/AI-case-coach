@@ -302,7 +302,7 @@ async def entrypoint(ctx: JobContext):
     --- PHASE 1: FRAMEWORK & STRUCTURE ---
     - Start by introducing the case context and objective.
     - Ask the candidate to structure their approach.
-    - CLARIFYING DATA: {json.dumps(case_data.get('clarifying_info', {}))}
+    - Provide answer to clarifying questions being asked.
 
     --- PHASE 2: ANALYSIS & DATA ---
     - Guide the candidate through the analysis. 
